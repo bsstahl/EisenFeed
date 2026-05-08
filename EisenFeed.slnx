@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/EisenFeed.Core/EisenFeed.Core.csproj" />
+  </Folder>
+</Solution>
