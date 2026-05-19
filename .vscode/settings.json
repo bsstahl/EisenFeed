@@ -8,7 +8,11 @@
     },
     "chat.tools.terminal.autoApprove": {
         ".specify/scripts/bash/": true,
-        ".specify/scripts/powershell/": true
+        ".specify/scripts/powershell/": true,
+        "/^& \"\\.specify/extensions/git/scripts/powershell/auto-commit\\.ps1\" \"after_constitution\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
     }
 }
 

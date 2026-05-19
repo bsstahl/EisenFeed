@@ -1,50 +1,62 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# EisenFeed Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Priority-Driven Evaluation (NON-NEGOTIABLE)
+EisenFeed MUST evaluate every feed item using the Eisenhower Matrix (Urgent vs. Important).
+All scoring logic MUST be transparent, testable, and explainable. Every item's quadrant position
+MUST be derivable from explicit urgency and importance values. Opaque scoring is forbidden.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Dynamic Content Aging
+Scores decay over time according to explicit aging rules. Urgency decays quickly unless reinforced;
+importance decays slowly or not at all for evergreen/VIP sources. Aging MUST be deterministic and
+configurable per feed modifier. Temporal changes in quadrant position MUST be predictable and
+observable through audit trails.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Composable Feed Modifiers
+Feed characteristics (owned, VIP, emergency, entertainment) MUST influence scoring via composable,
+independently testable modifiers. Modifiers MUST NOT hardcode business logic; they MUST only adjust
+coefficients. Adding a new modifier MUST NOT require changes to core scoring logic.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Integration-Ready Architecture
+Every subsystem (ingestion, scoring, aging, persistence) MUST expose a clear interface.
+EchoDrop integration MUST work via data contracts, not procedural coupling. Feed items MUST
+serialize/deserialize losslessly. Storage backends (SQL, cache, file) MUST be swappable.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Testable Scoring (MANDATORY)
+Scoring changes MUST be accompanied by test cases that document expected behavior before
+implementation. Scoring disputes MUST be resolved by reference to test coverage and audit trails.
+Non-deterministic scoring is forbidden. All numeric changes to urgency/importance MUST include
+rationale in code comments or documentation.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Design Constraints
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- **Technology Stack**: .NET 10+, layered architecture (ingestion → scoring → persistence → output)
+- **Feed Item Contract**: Immutable core (id, source, timestamp); mutable scores (urgency, importance, modifiers)
+- **Scoring Range**: All scores normalized to [0, 1] range
+- **Modifier Application**: Multiplicative only; no addition to base scores
+- **Data Persistence**: ACID transactions required for feed item mutations
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Development Workflow
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+1. **Specification First**: Before coding a new subsystem or modifier, specify its interface and scoring behavior
+2. **Test-Driven Implementation**: Tests written → User approval → Test fails → Implement → Refactor → Mutation Testing
+3. **Code Review Gate**: All PRs MUST verify principle compliance (especially priority-driven evaluation, testability)
+4. **Breaking Changes**: Scoring changes affecting quadrant classification MUST be versioned and documented
+5. **Observability**: Audit trails required for all score changes; logging MUST capture before/after states
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other development practices and architectural guidance. Changes to
+principles require ratification by the project lead and MUST include migration paths for affected code.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+All PRs and pull requests MUST verify compliance with Core Principles before merge. Architecture review
+MUST confirm that new features maintain composability and testability. Scoring logic changes MUST include
+regression test suites.
+
+Amendments follow semantic versioning:
+- **MAJOR**: Principle removal or redefinition (requires migration plan)
+- **MINOR**: New principle or expanded guidance
+- **PATCH**: Clarifications, wording, non-semantic refinements
+
+**Version**: 1.1.0 | **Ratified**: 2026-05-19 | **Last Amended**: 2026-05-19
