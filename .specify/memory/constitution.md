@@ -52,6 +52,7 @@ component-to-component calls SHOULD be avoided when Kafka-based handoff is appro
   configuration-driven when practical
 - **Internal Handoff**: Kafka is the default internal transport between processing stages
 - **Contract Evolution**: Public contracts MUST evolve additively and avoid unnecessary breaking changes
+- **Repository Layout**: Production code MUST live under `src/` and tests MUST live under `tst/`
 
 ## Development Workflow
 
@@ -75,4 +76,4 @@ Amendments follow semantic versioning:
 - **MINOR**: New principle or expanded guidance
 - **PATCH**: Clarifications, wording, non-semantic refinements
 
-**Version**: 1.2.0 | **Ratified**: 2026-05-19 | **Last Amended**: 2026-06-23
+**Version**: 1.2.1 | **Ratified**: 2026-05-19 | **Last Amended**: 2026-06-24

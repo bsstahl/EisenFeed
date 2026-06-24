@@ -119,6 +119,41 @@ EchoDrop becomes the output system; EisenFeed becomes the input triage system.
 - Content suggestions  
 - Cross‑system metadata sharing  
 
+## Aspire Workspace Setup
+
+This repository now includes an Aspire AppHost at `src/EisenFeed.AppHost/` for local orchestration.
+
+- AppHost project: `src/EisenFeed.AppHost/EisenFeed.AppHost.csproj`
+- Core library project: `src/EisenFeed.Core/EisenFeed.Core.csproj`
+
+Current status:
+
+- Aspire is initialized and the AppHost is part of the solution.
+- The AppHost is currently a minimal stub (`Build().Run()`).
+- `EisenFeed.Core` is a class library, so there is not yet a runnable API/worker resource to attach.
+
+Run locally with `dotnet`:
+
+```powershell
+dotnet restore
+dotnet build EisenFeed.slnx
+dotnet run --project .\src\EisenFeed.AppHost\EisenFeed.AppHost.csproj
+```
+
+Next step to fully wire Aspire resources:
+
+- Add a runnable service project (for example, an ASP.NET Core API or Worker).
+- Reference that project from the AppHost with `builder.AddProject(...)`.
+- Optionally add data resources such as Postgres or Redis and wire `WithReference(...)`/`WaitFor(...)`.
+
+## Repository Layout Conventions
+
+- Production code MUST live under `src/`.
+- Test code MUST live under `tst/`.
+- New projects should follow this pattern:
+	- `src/<ProjectName>/...`
+	- `tst/<ProjectName>.Tests/...`
+
 ## 📦 Status
 
 EisenFeed is currently in active design and early prototyping.  
