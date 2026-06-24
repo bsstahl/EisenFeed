@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/tst/">
+    <Project Path="tst/EisenFeed.Ingestion.Tests/EisenFeed.Ingestion.Tests.csproj" />
+  </Folder>
   <Project Path="src/EisenFeed.AppHost/EisenFeed.AppHost.csproj" />
   <Folder Name="/src/">
     <Project Path="src/EisenFeed.Core/EisenFeed.Core.csproj" />

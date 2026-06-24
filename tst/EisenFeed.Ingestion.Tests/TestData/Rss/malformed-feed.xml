@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Malformed Feed</title>
+    <item>
+      <guid>broken-item</guid>
+      <title>Broken item</title>
+      <description>Missing closing tags to simulate malformed payload

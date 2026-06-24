@@ -1,0 +1,5 @@
+<Project>
+  <ItemGroup>
+    <PackageReference Include="TestHelperExtensions" Version="2.4.0" />
+  </ItemGroup>
+</Project>

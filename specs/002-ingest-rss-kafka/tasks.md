@@ -18,11 +18,11 @@
 
 **Purpose**: Prepare test infrastructure under `tst/` without adding production code.
 
-- [ ] T001 Create ingestion test project scaffold in tst/EisenFeed.Ingestion.Tests/EisenFeed.Ingestion.Tests.csproj
-- [ ] T002 Add test project to solution in EisenFeed.slnx
-- [ ] T003 [P] Create shared test fixtures folder and base fixture in tst/EisenFeed.Ingestion.Tests/Common/IngestionTestFixture.cs
-- [ ] T004 [P] Add XML test payload fixtures for parser strategy tests in tst/EisenFeed.Ingestion.Tests/TestData/Rss/
-- [ ] T005 [P] Add canonical FeedItem fixture builders for producer tests in tst/EisenFeed.Ingestion.Tests/Common/CanonicalFeedItemFactory.cs
+- [x] T001 Create ingestion test project scaffold in tst/EisenFeed.Ingestion.Tests/EisenFeed.Ingestion.Tests.csproj
+- [x] T002 Add test project to solution in EisenFeed.slnx
+- [x] T003 [P] Create shared test fixtures folder and base fixture in tst/EisenFeed.Ingestion.Tests/Common/IngestionTestFixture.cs
+- [x] T004 [P] Add XML test payload fixtures for parser strategy tests in tst/EisenFeed.Ingestion.Tests/TestData/Rss/
+- [x] T005 [P] Add canonical FeedItem fixture builders for producer tests in tst/EisenFeed.Ingestion.Tests/Common/CanonicalFeedItemFactory.cs
 
 ---
 
