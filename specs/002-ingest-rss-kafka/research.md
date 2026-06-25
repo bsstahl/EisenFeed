@@ -85,3 +85,43 @@
   - Batch publish then batch DB confirmation: rejected because confirmation failure can duplicate an entire feed on retry.
   - Kafka-only idempotency with no store: rejected because pre-publish existence checks and durable run accounting are not reliable enough.
   - Exactly-once cross-system transactions: rejected for this increment due to high implementation and operational complexity.
+
+---
+
+## Future Enhancements (Beyond MVP)
+
+### FE-001: Content Fingerprinting for Feeds Without Consistent Item Identity
+
+- **Problem**: Some RSS feeds lack stable item identities (missing GUID, reused links, unstable titles). Current `FeedIdItemId` strategy is insufficient for these feeds, leading to duplicate ingestion or missed items on retries.
+- **Proposed Solution**: Introduce a pluggable identity strategy system with support for `ContentFingerprint` strategy alongside the current `FeedIdItemId` strategy.
+  - Compute a deterministic content hash (e.g., SHA-256 of normalized title + content) for identity when GUID/link are unreliable.
+  - Make strategy selection configurable per feed or auto-detected based on feed characteristics.
+  - Maintain backward compatibility by keeping `FeedIdItemId` as the default strategy.
+- **Expected Benefits**:
+  - Handles low-quality feeds that change item metadata arbitrarily.
+  - Reduces duplicate ingestion in unreliable feed sources.
+  - Extensible for future identity strategies (e.g., author+date fingerprint).
+- **Considerations**:
+  - Content fingerprinting is slower than GUID-based identity; may require batching or caching.
+  - Collisions (different items with identical normalized content) are rare but possible; requires monitoring.
+  - Migration path needed for existing feeds switching identity strategies.
+
+### FE-002: LLM-Based Normalization for Unparseable Feed Items
+
+- **Problem**: Some feed items contain malformed XML, encoding errors, or non-standard structures that fail to parse into canonical `FeedItem` objects. Current error handling skips these items entirely, losing potentially valuable content.
+- **Proposed Solution**: Introduce a [Behavioral Layer](https://cognitiveinheritance.com/Posts/introducing-the-behavioral-layer.html) pattern with optional LLM-based item recovery and normalization.
+  - When an item fails to parse, capture the raw content and error context.
+  - Route to an LLM service (e.g., Azure OpenAI) with a prompt to attempt structured extraction of Title, Content, PublishedAt.
+  - If LLM succeeds, synthesize a `FeedItem` with LLM-extracted fields and a `normalized: true` metadata flag.
+  - If LLM fails or is disabled, fall back to current skip/error behavior.
+  - Track recovery success rate and confidence score from LLM for observability.
+- **Expected Benefits**:
+  - Recovers content from malformed but semantically parseable items.
+  - Reduces loss of feed data due to encoding or structural irregularities.
+  - Enables feed sources with legacy or non-compliant XML to be ingested reliably.
+- **Considerations**:
+  - LLM calls introduce latency and cost; requires careful rate-limiting and caching of results.
+  - Behavioral Layer must be optional and degradable; system works without it.
+  - Confidence scoring needed to prevent propagation of low-quality LLM extractions downstream.
+  - Privacy and data residency concerns if feeding raw content to external LLM services; consider on-device models.
+  - Testing: synthetic malformed XML fixtures needed to validate recovery behavior and confidence thresholds.

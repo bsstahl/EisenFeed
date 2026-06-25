@@ -92,6 +92,13 @@ A stable, deterministic string that uniquely identifies one logical FeedItem wit
 Derived in priority order: RSS GUID → canonical link → normalized title + published-date fallback.
 Never changes for the same logical item regardless of metadata edits.
 
+### Feed Item Identity Strategy / IFeedItemIdentityStrategy
+
+A pluggable strategy for deriving stable item identity when standard RSS metadata is missing, inconsistent,
+or unreliable. Implementations include:
+- **FeedIdItemId** (default): Uses RSS GUID or canonical link with fallback to title + published-date.
+- **ContentFingerprint** (proposed): Uses deterministic content hash for feeds with unstable metadata.
+
 ### Canonical Feed Item
 
 A `FeedItem` instance that has been fully normalized and identity-stamped, ready for idempotency
@@ -121,6 +128,14 @@ The **Transform** stage of the CTP pipeline for the Ingestion Service. Accepts a
 and emits a collection of Canonical Feed Items — one per entry in the feed. Each FeedItem produced
 carries both feed-level data (FeedId) and item-level data (ItemId, Title, PublishedAt, Content).
 Implemented via a Parser Strategy.
+
+### Behavioral Layer
+
+An optional recovery mechanism for feed items that fail to parse due to malformed XML, encoding errors,
+or non-standard structures. The Behavioral Layer attempts to extract and normalize item metadata using
+LLM-assisted techniques (e.g., Azure OpenAI), returning a Canonical Feed Item with a confidence score
+and `normalized: true` flag. If recovery fails or is disabled, the item is skipped per current error handling.
+Inspired by [Cognitive Inheritance Behavioral Layer](https://cognitiveinheritance.com/Posts/introducing-the-behavioral-layer.html).
 
 ### Produce / Produce Step
 
