@@ -7,9 +7,9 @@ public sealed class FeedParserStrategySelectorTests
     [Fact]
     public void Select_WhenRssContentType_ReturnsRssXmlParserStrategy()
     {
-        var selector = CreateSut();
+        var target = CreateTestTarget();
 
-        IFeedParserStrategy strategy = selector.Select("application/rss+xml");
+        IFeedParserStrategy strategy = target.Select("application/rss+xml");
 
         Assert.IsType<RssXmlParserStrategy>(strategy);
     }
@@ -17,12 +17,12 @@ public sealed class FeedParserStrategySelectorTests
     [Fact]
     public void Select_WhenUnknownContentType_ThrowsNotSupportedException()
     {
-        var selector = CreateSut();
+        var target = CreateTestTarget();
 
-        Assert.Throws<NotSupportedException>(() => selector.Select("application/unknown"));
+        Assert.Throws<NotSupportedException>(() => target.Select("application/unknown"));
     }
 
-    private static FeedParserStrategySelector CreateSut()
+    private static FeedParserStrategySelector CreateTestTarget()
     {
         return new FeedParserStrategySelector();
     }

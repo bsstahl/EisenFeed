@@ -8,10 +8,10 @@ public sealed class FeedIdItemIdMessageMapperTests
     [Fact]
     public async Task MapMessagesAsync_WhenItemsProvided_MapsKeyAsFeedIdColonItemId()
     {
-        var mapper = CreateSut();
+        var target = CreateTestTarget();
         var item = CanonicalFeedItemFactory.Create(feedId: "feed-a", itemId: "item-42");
 
-        IReadOnlyCollection<FeedKafkaMessage> messages = await mapper.MapMessagesAsync(new[] { item }, CancellationToken.None);
+        IReadOnlyCollection<FeedKafkaMessage> messages = await target.MapMessagesAsync(new[] { item }, CancellationToken.None);
 
         FeedKafkaMessage message = Assert.Single(messages);
         Assert.Equal("feed-a:item-42", message.Key);
@@ -20,10 +20,10 @@ public sealed class FeedIdItemIdMessageMapperTests
     [Fact]
     public async Task MapMessagesAsync_WhenItemsProvided_MapsPayloadFieldsFromCanonicalFeedItem()
     {
-        var mapper = CreateSut();
+        var target = CreateTestTarget();
         var item = CanonicalFeedItemFactory.Create(feedId: "feed-b", itemId: "item-99", title: "title", content: "body");
 
-        IReadOnlyCollection<FeedKafkaMessage> messages = await mapper.MapMessagesAsync(new[] { item }, CancellationToken.None);
+        IReadOnlyCollection<FeedKafkaMessage> messages = await target.MapMessagesAsync(new[] { item }, CancellationToken.None);
 
         FeedKafkaMessage message = Assert.Single(messages);
         Assert.Contains("\"feedId\":\"feed-b\"", message.Payload, StringComparison.OrdinalIgnoreCase);
@@ -31,7 +31,7 @@ public sealed class FeedIdItemIdMessageMapperTests
         Assert.Contains("\"title\":\"title\"", message.Payload, StringComparison.OrdinalIgnoreCase);
     }
 
-    private static FeedIdItemIdMessageMapper CreateSut()
+    private static FeedIdItemIdMessageMapper CreateTestTarget()
     {
         return new FeedIdItemIdMessageMapper();
     }

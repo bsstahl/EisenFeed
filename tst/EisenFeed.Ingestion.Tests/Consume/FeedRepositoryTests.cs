@@ -7,15 +7,15 @@ public sealed class FeedRepositoryTests
     [Fact]
     public async Task FetchAsync_WhenFeedIsReachable_ReturnsRawRssPayload()
     {
-        var repository = CreateSut();
+        var target = CreateTestTarget();
 
-        string payload = await repository.FetchAsync(new Uri("https://example.com/feed.xml"), CancellationToken.None);
+        string payload = await target.FetchAsync(new Uri("https://example.com/feed.xml"), CancellationToken.None);
 
         Assert.False(string.IsNullOrWhiteSpace(payload));
         Assert.Contains("<rss", payload, StringComparison.OrdinalIgnoreCase);
     }
 
-    private static IReadRssFeeds CreateSut()
+    private static IReadRssFeeds CreateTestTarget()
     {
         return new FeedRepository();
     }

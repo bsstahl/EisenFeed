@@ -7,10 +7,10 @@ public sealed class RssXmlParserStrategyTests
     [Fact]
     public async Task ParseAsync_WhenXmlIsValid_ReturnsCanonicalFeedItems()
     {
-        var strategy = CreateSut();
+        var target = CreateTestTarget();
         string xml = await File.ReadAllTextAsync(Path.Combine("TestData", "Rss", "valid-feed.xml"));
 
-        IReadOnlyCollection<EisenFeed.Core.Models.FeedItem> items = await strategy.ParseAsync(
+        IReadOnlyCollection<EisenFeed.Core.Models.FeedItem> items = await target.ParseAsync(
             "sample-feed",
             xml,
             CancellationToken.None);
@@ -24,7 +24,7 @@ public sealed class RssXmlParserStrategyTests
         });
     }
 
-    private static RssXmlParserStrategy CreateSut()
+    private static RssXmlParserStrategy CreateTestTarget()
     {
         return new RssXmlParserStrategy();
     }

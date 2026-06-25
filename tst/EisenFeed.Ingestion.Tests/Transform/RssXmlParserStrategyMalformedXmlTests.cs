@@ -7,16 +7,16 @@ public sealed class RssXmlParserStrategyMalformedXmlTests
     [Fact]
     public async Task ParseAsync_WhenXmlIsMalformed_ThrowsFormatException()
     {
-        var strategy = CreateSut();
+        var target = CreateTestTarget();
         string xml = await File.ReadAllTextAsync(Path.Combine("TestData", "Rss", "malformed-feed.xml"));
 
-        await Assert.ThrowsAsync<FormatException>(() => strategy.ParseAsync(
+        await Assert.ThrowsAsync<FormatException>(() => target.ParseAsync(
             "sample-feed",
             xml,
             CancellationToken.None));
     }
 
-    private static RssXmlParserStrategy CreateSut()
+    private static RssXmlParserStrategy CreateTestTarget()
     {
         return new RssXmlParserStrategy();
     }
