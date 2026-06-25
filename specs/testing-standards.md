@@ -203,16 +203,29 @@ All test classes MUST declare xUnit `Trait` attributes for filtering and grouped
 Required traits:
 
 - `TestType`: `Unit` or `Integration`
-- `Phase`: `Consume`, `Transform`, or `Produce` (or another explicit pipeline/domain phase)
+- `Phase`: `Consume`, `Transform`, `Produce`, `Orchestration`, or `All`
+  - Use `All` for cross-stage integration tests that exercise the full pipeline end-to-end
 - `Component`: concrete class or subsystem under test
 
-Example:
+Example (unit test):
 
 ```csharp
 [Trait("TestType", "Unit")]
 [Trait("Phase", "Produce")]
 [Trait("Component", "FeedRepository")]
 public sealed class FeedRepository_PublishAsync_Should
+{
+    ...
+}
+```
+
+Example (cross-stage integration test):
+
+```csharp
+[Trait("TestType", "Integration")]
+[Trait("Phase", "All")]
+[Trait("Component", "IngestionPipeline")]
+public sealed class IngestionPipeline_RunOnceAsync_Should
 {
     ...
 }

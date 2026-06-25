@@ -1,14 +1,18 @@
 <Solution>
   <Folder Name="/tst/">
     <Project Path="tst/EisenFeed.Ingestion.Consume.Rss.Tests/EisenFeed.Ingestion.Consume.Rss.Tests.csproj" />
+    <Project Path="tst/EisenFeed.Ingestion.Orchestration.Tests/EisenFeed.Ingestion.Orchestration.Tests.csproj" />
     <Project Path="tst/EisenFeed.Ingestion.Produce.Kafka.Tests/EisenFeed.Ingestion.Produce.Kafka.Tests.csproj" />
+    <Project Path="tst/EisenFeed.Ingestion.Service.Tests/EisenFeed.Ingestion.Service.Tests.csproj" />
     <Project Path="tst/EisenFeed.Ingestion.Transform.Rules.Tests/EisenFeed.Ingestion.Transform.Rules.Tests.csproj" />
   </Folder>
   <Project Path="src/EisenFeed.AppHost/EisenFeed.AppHost.csproj" />
   <Folder Name="/src/">
     <Project Path="src/EisenFeed.Core/EisenFeed.Core.csproj" />
     <Project Path="src/EisenFeed.Ingestion.Consume.Rss/EisenFeed.Ingestion.Consume.Rss.csproj" />
+    <Project Path="src/EisenFeed.Ingestion.Orchestration/EisenFeed.Ingestion.Orchestration.csproj" />
     <Project Path="src/EisenFeed.Ingestion.Produce.Kafka/EisenFeed.Ingestion.Produce.Kafka.csproj" />
+    <Project Path="src/EisenFeed.Ingestion.Service/EisenFeed.Ingestion.Service.csproj" />
     <Project Path="src/EisenFeed.Ingestion.Transform.Rules/EisenFeed.Ingestion.Transform.Rules.csproj" />
   </Folder>
 </Solution>

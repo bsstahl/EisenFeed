@@ -4,9 +4,9 @@
 
 **Prerequisites**: `plan.md`, `spec.md`, `research.md`, `data-model.md`, `contracts/`
 
-**Tests**: Strict test-first sequencing is required for this feature. All test tasks are defined before any production code tasks.
+**Tests**: Strict test-first sequencing is required for this feature. Each user story's tests are written and confirmed RED before that story's production code is written.
 
-**Organization**: Tasks are grouped by user story and include an explicit approval gate that blocks all `src/` production code tasks until user approval is granted.
+**Organization**: Tasks are paired by story (tests then implementation) and include an explicit approval gate that blocks all `src/` production code tasks until user approval is granted.
 
 ## Format: `[ID] [P?] [Story] Description`
 
@@ -26,7 +26,7 @@
 
 ---
 
-## Phase 2: User Story 1 Tests - Ingest New Feed Items Reliably (Priority: P1)
+## Phase 2: User Story 1 Tests (RED) - Ingest New Feed Items Reliably (Priority: P1)
 
 **Goal**: Define failing tests for consume/transform/produce stage behavior for new-item ingestion.
 
@@ -39,38 +39,11 @@
 - [x] T010 [P] [US1] Create transform strategy selector tests for canonical-item strategy dispatch in tst/EisenFeed.Ingestion.Transform.Rules.Tests/FeedTransformStrategySelector_Select_Should.cs
 - [x] T011 [P] [US1] Create message mapper unit tests with canonical FeedItems for key/payload mapping in tst/EisenFeed.Ingestion.Produce.Kafka.Tests/FeedIdItemIdMessageMapper_MapMessagesAsync_Should.cs
 - [x] T012 [P] [US1] Create producer repository unit tests with canonical FeedItems for ack/error handling in tst/EisenFeed.Ingestion.Produce.Kafka.Tests/FeedRepository_PublishAsync_Should.cs
-- [x] T013 [US1] Add initial red-test execution notes for US1 in specs/002-ingest-rss-kafka/checklists/requirements.md
+- [x] T013 [US1] **GATE**: Confirm all US1 tests fail (RED) before proceeding to Phase 5 — record results in specs/002-ingest-rss-kafka/checklists/requirements.md
 
 ---
 
-## Phase 3: User Story 2 Tests - Safe Re-Runs After Failures (Priority: P2)
-
-**Goal**: Define failing tests for at-least-once rerun semantics and idempotent skip behavior.
-
-**Independent Test**: Tests fail initially and verify safe re-runs after partial completion and transient publish failures.
-
-- [ ] T014 [P] [US2] Create orchestration unit tests for skipping already-ingested identities across reruns in tst/EisenFeed.Ingestion.Orchestration.Tests/Orchestration/IngestionOrchestratorIdempotencyTests.cs
-- [ ] T015 [P] [US2] Create orchestration unit tests for continue-on-item-failure semantics in tst/EisenFeed.Ingestion.Orchestration.Tests/Orchestration/IngestionOrchestratorContinueOnFailureTests.cs
-- [ ] T016 [P] [US2] Create integration tests for at-least-once publish behavior on retry in tst/EisenFeed.Ingestion.Orchestration.Tests/Integration/AtLeastOnceRetryIntegrationTests.cs
-- [ ] T017 [P] [US2] Create integration tests for duplicate-minimization with persistent ingested records in tst/EisenFeed.Ingestion.Orchestration.Tests/Integration/DuplicateMinimizationIntegrationTests.cs
-- [ ] T018 [US2] Add initial red-test execution notes for US2 in specs/002-ingest-rss-kafka/checklists/requirements.md
-
----
-
-## Phase 4: User Story 3 Tests - Observable Ingestion Outcome (Priority: P3)
-
-**Goal**: Define failing tests for run summary contract and reporting counters.
-
-**Independent Test**: Tests fail initially and verify discovered/ingested/skipped/failed counts and status transitions.
-
-- [ ] T019 [P] [US3] Create run summary builder unit tests for counter invariants in tst/EisenFeed.Ingestion.Orchestration.Tests/Orchestration/RunSummaryBuilderTests.cs
-- [ ] T020 [P] [US3] Create run summary contract serialization tests in tst/EisenFeed.Ingestion.Orchestration.Tests/Contracts/IngestionRunSummaryContractTests.cs
-- [ ] T021 [P] [US3] Create integration tests for mixed outcomes reporting in tst/EisenFeed.Ingestion.Orchestration.Tests/Integration/IngestionRunSummaryIntegrationTests.cs
-- [ ] T022 [US3] Add initial red-test execution notes for US3 in specs/002-ingest-rss-kafka/checklists/requirements.md
-
----
-
-## Phase 5: Approval Gate - Required Before Production Code
+## Phase 3: Approval Gate - Required Before Production Code
 
 **Purpose**: Enforce explicit user approval before creating or editing production code under `src/`.
 
@@ -80,20 +53,18 @@
 
 ---
 
-## Phase 6: Foundational Production Scaffolding (Blocked by T023)
+## Phase 4: Foundational Production Scaffolding (Blocked by T023)
 
-**Purpose**: Create the four-library architecture and the service host required by FR-019 and FR-020.
+**Purpose**: Create the stage libraries required by FR-019. Service scaffolding is deferred to Phase 7 where it is first needed.
 
 - [x] T024 Create consume library project in src/EisenFeed.Ingestion.Consume.Rss/EisenFeed.Ingestion.Consume.Rss.csproj
 - [x] T025 [P] Create transform library project in src/EisenFeed.Ingestion.Transform.Rules/EisenFeed.Ingestion.Transform.Rules.csproj
 - [x] T026 [P] Create produce library project in src/EisenFeed.Ingestion.Produce.Kafka/EisenFeed.Ingestion.Produce.Kafka.csproj
-- [ ] T027 [P] Create orchestration library project in src/EisenFeed.Ingestion.Orchestration/EisenFeed.Ingestion.Orchestration.csproj
-- [ ] T028 Create ingestion host service project in src/EisenFeed.Ingestion.Service/EisenFeed.Ingestion.Service.csproj
-- [ ] T029 Wire project references and solution entries in EisenFeed.slnx
+- [x] T027 [P] Create orchestration library project in src/EisenFeed.Ingestion.Orchestration/EisenFeed.Ingestion.Orchestration.csproj
 
 ---
 
-## Phase 7: User Story 1 Implementation - Ingest New Feed Items Reliably (Blocked by T023)
+## Phase 5: User Story 1 Implementation (GREEN) - Ingest New Feed Items Reliably (Blocked by T023)
 
 **Goal**: Implement retrieve, transform strategy, and produce repository behavior to satisfy US1 tests.
 
@@ -106,34 +77,66 @@
 - [x] T034 [P] [US1] Implement rules-based canonical-item transformer and rule contract in src/EisenFeed.Ingestion.Transform.Rules/FeedItemTransformer.cs and src/EisenFeed.Ingestion.Transform.Rules/ITransformFeedItemRule.cs
 - [x] T035 [P] [US1] Implement producer repository abstraction in src/EisenFeed.Core/Contracts/IWriteFeedItems.cs and Kafka implementation wiring in src/EisenFeed.Ingestion.Produce.Kafka/FeedRepository.cs
 - [x] T036 [P] [US1] Implement Kafka producer repository mapping/delivery logic in src/EisenFeed.Ingestion.Produce.Kafka/FeedRepository.cs
-- [x] T037 [US1] Run US1 tests and capture green results in specs/002-ingest-rss-kafka/checklists/requirements.md
+- [x] T037 [US1] **GATE**: Confirm all US1 tests pass (GREEN) before proceeding to Phase 6 — record results in specs/002-ingest-rss-kafka/checklists/requirements.md
 
 ---
 
-## Phase 8: User Story 2 Implementation - Safe Re-Runs After Failures (Blocked by T023)
+## Phase 6: User Story 2 Tests (RED) - Safe Re-Runs After Failures (Priority: P2)
 
-**Goal**: Implement orchestration and idempotency behavior for at-least-once reruns.
+**Goal**: Define failing unit tests for orchestration behavior and failing Aspire integration tests for end-to-end pipeline execution.
 
-**Independent Test**: All US2 tests in Phase 3 pass.
+**Independent Test**: All unit tests fail initially against missing orchestration types. All integration tests fail initially because the service host and run summary do not yet exist.
 
+- [x] T014 [P] [US2] Create orchestration unit tests for skipping already-ingested identities across reruns in tst/EisenFeed.Ingestion.Orchestration.Tests/IngestionOrchestrator_RunOnceAsync_Should.cs
+- [x] T015 [P] [US2] Create orchestration unit tests for continue-on-item-failure semantics in tst/EisenFeed.Ingestion.Orchestration.Tests/IngestionOrchestrator_RunOnceAsync_Should.cs
+- [x] T016 [P] [US2] Create re-run delivery tests for at-least-once behavior in tst/EisenFeed.Ingestion.Orchestration.Tests/IngestionOrchestrator_RunOnceAsync_Should.cs
+- [x] T017 [P] [US2] Create re-run delivery tests for duplicate-minimization via idempotency store in tst/EisenFeed.Ingestion.Orchestration.Tests/IngestionOrchestrator_RunOnceAsync_Should.cs
+- [x] T050 [P] [US2] Create integration test project scaffold in tst/EisenFeed.Ingestion.Service.Tests/EisenFeed.Ingestion.Service.Tests.csproj with reference to EisenFeed.AppHost
+- [x] T051 [P] [US2] Create Aspire integration test for full pipeline run: items retrieved from RSS stub, published to Kafka, skipped on re-run in tst/EisenFeed.Ingestion.Service.Tests/IngestionPipeline_RunOnceAsync_Should.cs
+- [ ] T018 [US2] **GATE**: Confirm all US2 unit and integration tests fail (RED) before proceeding to Phase 7 — record results in specs/002-ingest-rss-kafka/checklists/requirements.md
+
+---
+
+## Phase 7: User Story 2 Implementation (GREEN) - Safe Re-Runs After Failures (Blocked by T023)
+
+**Goal**: Implement orchestration, idempotency, and host wiring sufficient to pass all US2 unit and Aspire integration tests.
+
+**Independent Test**: All US2 unit tests in Phase 6 pass and Aspire integration tests execute end-to-end.
+
+- [ ] T028 Create ingestion host service project in src/EisenFeed.Ingestion.Service/EisenFeed.Ingestion.Service.csproj
+- [ ] T029 Wire ingestion service project references and solution entries in EisenFeed.slnx
 - [ ] T038 [P] [US2] Implement ingestion orchestration flow in src/EisenFeed.Ingestion.Orchestration/IngestionOrchestrator.cs
 - [ ] T039 [P] [US2] Implement persistent Feed Item Ingestion store adapter usage in src/EisenFeed.Ingestion.Orchestration/IngestionOrchestrator.cs
 - [ ] T040 [P] [US2] Implement retry-aware at-least-once produce orchestration in src/EisenFeed.Ingestion.Orchestration/IngestionOrchestrator.cs
 - [ ] T041 [US2] Integrate orchestration with host startup wiring in src/EisenFeed.Ingestion.Service/Program.cs
-- [ ] T042 [US2] Run US2 tests and capture green results in specs/002-ingest-rss-kafka/checklists/requirements.md
+- [ ] T042 [US2] **GATE**: Confirm all US2 unit and integration tests pass (GREEN) before proceeding to Phase 8 — record results in specs/002-ingest-rss-kafka/checklists/requirements.md
 
 ---
 
-## Phase 9: User Story 3 Implementation - Observable Ingestion Outcome (Blocked by T023)
+## Phase 8: User Story 3 Tests (RED) - Observable Ingestion Outcome (Priority: P3)
 
-**Goal**: Implement run summary accounting and contract output.
+**Goal**: Define failing unit tests for run summary behavior and failing Aspire integration tests that assert observable run outcome data from a full pipeline execution.
 
-**Independent Test**: All US3 tests in Phase 4 pass.
+**Independent Test**: All unit tests fail initially against missing run summary types. Aspire integration tests fail initially because summary output does not yet exist on the service boundary.
+
+- [ ] T019 [P] [US3] Create run summary builder unit tests for counter invariants in tst/EisenFeed.Ingestion.Orchestration.Tests/RunSummaryBuilder_BuildAsync_Should.cs
+- [ ] T020 [P] [US3] Create run summary contract serialization tests in tst/EisenFeed.Ingestion.Orchestration.Tests/IngestionRunSummary_Serialization_Should.cs
+- [ ] T021 [P] [US3] Create orchestration run-outcome unit tests for mixed item results in tst/EisenFeed.Ingestion.Orchestration.Tests/IngestionOrchestrator_RunOnceAsync_Should.cs
+- [ ] T052 [P] [US3] Create Aspire integration test asserting run summary (discovered/ingested/skipped/failed counts) is returned after a full pipeline run in tst/EisenFeed.Ingestion.Service.Tests/IngestionPipeline_RunOnceAsync_Should.cs
+- [ ] T022 [US3] **GATE**: Confirm all US3 unit and integration tests fail (RED) before proceeding to Phase 9 — record results in specs/002-ingest-rss-kafka/checklists/requirements.md
+
+---
+
+## Phase 9: User Story 3 Implementation (GREEN) - Observable Ingestion Outcome (Blocked by T023)
+
+**Goal**: Implement run summary accounting and contract output sufficient to pass all US3 unit and Aspire integration tests.
+
+**Independent Test**: All US3 unit and integration tests in Phase 8 pass.
 
 - [ ] T043 [P] [US3] Implement run summary aggregation in src/EisenFeed.Ingestion.Orchestration/RunSummaryBuilder.cs
 - [ ] T044 [P] [US3] Implement run status/counter invariants in src/EisenFeed.Ingestion.Orchestration/RunSummaryBuilder.cs
 - [ ] T045 [US3] Expose run summary output from orchestration service boundary in src/EisenFeed.Ingestion.Service/Program.cs
-- [ ] T046 [US3] Run US3 tests and capture green results in specs/002-ingest-rss-kafka/checklists/requirements.md
+- [ ] T046 [US3] **GATE**: Confirm all US3 unit and integration tests pass (GREEN) before proceeding to Phase 10 — record results in specs/002-ingest-rss-kafka/checklists/requirements.md
 
 ---
 
@@ -151,19 +154,21 @@
 
 ### Phase Dependencies
 
-- Phase 1 must complete before user story test phases.
-- Phase 2, Phase 3, and Phase 4 are all test-only phases and must complete before Phase 5.
-- Phase 5 (T023 approval gate) blocks every production phase.
-- Phase 6 depends on T023 and blocks Phases 7 to 9.
-- Phase 7 (US1 implementation) should complete before Phase 8 for minimum-risk delivery.
-- Phase 8 should complete before Phase 9 because run-summary behavior depends on orchestration outcomes.
-- Phase 10 depends on completion of desired user story phases.
+- Phase 1 (Setup) must complete before Phase 2.
+- Phase 2 (US1 Tests) must complete before Phase 3 (Approval Gate).
+- Phase 3 (Approval Gate) blocks Phase 4 and all implementation phases.
+- Phase 4 (Foundational Scaffolding) must complete before Phase 5.
+- Phase 5 (US1 Implementation) must complete before Phase 6 (US2 Tests). Gate: T037.
+- Phase 6 (US2 Tests) must complete before Phase 7 (US2 Implementation). Gate: T018.
+- Phase 7 (US2 Implementation) must complete before Phase 8 (US3 Tests). Gate: T042.
+- Phase 8 (US3 Tests) must complete before Phase 9 (US3 Implementation). Gate: T022.
+- Phase 10 depends on completion of all story phases. Gate: T046.
 
 ### User Story Dependencies
 
-- US1 (P1): Test phase can start after Phase 1; implementation can start only after T023 and Phase 6.
-- US2 (P2): Test phase can start after Phase 1; implementation can start only after T023, Phase 6, and US1 implementation baseline.
-- US3 (P3): Test phase can start after Phase 1; implementation can start only after T023 and orchestration baseline from US2.
+- US1 (P1): Tests in Phase 2; implementation in Phase 5 after T023 and Phase 4.
+- US2 (P2): Tests in Phase 6 after US1 implementation; implementation in Phase 7.
+- US3 (P3): Tests in Phase 8 after US2 implementation; implementation in Phase 9.
 
 ### Approval Gate Rule
 
@@ -174,50 +179,30 @@
 ## Parallel Opportunities
 
 - Phase 1: T003-T005 can run in parallel.
-- US1 test phase: T006-T012 can run in parallel once fixtures are in place.
-- US2 test phase: T014-T017 can run in parallel.
-- US3 test phase: T019-T021 can run in parallel.
-- Foundational production scaffolding: T025-T027 can run in parallel after T024 starts.
-- US1 implementation: T030-T036 are largely parallel by library boundary.
-
----
-
-## Parallel Example: Strict Test-First Batch
-
-```bash
-# US1 test batch (all before any src/ code)
-Task: T006
-Task: T007
-Task: T008
-Task: T009
-Task: T010
-Task: T011
-Task: T012
-
-# US2 at-least-once semantics tests (all before any src/ code)
-Task: T014
-Task: T015
-Task: T016
-Task: T017
-```
+- Phase 2 (US1 tests): T006-T012 can run in parallel once fixtures are in place.
+- Phase 4 (Scaffolding): T025-T027 can run in parallel after T024 starts.
+- Phase 5 (US1 implementation): T030-T036 are largely parallel by library boundary.
+- Phase 6 (US2 tests): T014-T017, T050-T051 can run in parallel.
+- Phase 8 (US3 tests): T019-T021, T052 can run in parallel.
 
 ---
 
 ## Implementation Strategy
 
-### MVP First (US1 with Hard Test Gate)
+### Story-Paired TDD
 
-1. Complete Phase 1 and all US1/US2/US3 test phases (Phase 2-4).
-2. Complete Phase 5 approval gate (T023) with explicit user confirmation.
-3. Complete Phase 6 scaffolding.
-4. Complete Phase 7 (US1 implementation) and validate US1 independently.
+For each user story: write tests (RED), then implement (GREEN), then validate before moving to the next story.
 
-### Incremental Delivery
-
-1. Tests first for all stories (Phase 2-4).
-2. Explicit gate approval (Phase 5).
-3. Implement US1, then US2, then US3 with independent verification per phase.
-4. Finish with Phase 10 cross-cutting validation.
+1. Phase 1: Setup test infrastructure.
+2. Phase 2: Write US1 tests (RED).
+3. Phase 3: Approval gate.
+4. Phase 4: Foundational scaffolding.
+5. Phase 5: Implement US1 (GREEN) — validate before continuing.
+6. Phase 6: Write US2 tests (RED).
+7. Phase 7: Implement US2 (GREEN) — validate before continuing.
+8. Phase 8: Write US3 tests (RED).
+9. Phase 9: Implement US3 (GREEN) — validate before continuing.
+10. Phase 10: Polish and full-suite validation.
 
 ### Blocker Policy
 
