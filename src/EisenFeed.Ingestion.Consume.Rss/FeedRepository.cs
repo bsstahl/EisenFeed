@@ -9,6 +9,17 @@ public sealed class FeedRepository : IReadRssFeeds
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
 
-    public Task<string> FetchAsync(Uri feedUrl, CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+    public async Task<string> FetchAsync(Uri feedUrl, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(feedUrl);
+
+        using var request = new HttpRequestMessage(HttpMethod.Get, feedUrl);
+        using HttpResponseMessage response = await _httpClient.SendAsync(
+            request,
+            HttpCompletionOption.ResponseHeadersRead,
+            cancellationToken).ConfigureAwait(false);
+
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+    }
 }

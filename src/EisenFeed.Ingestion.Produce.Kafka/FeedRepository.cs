@@ -13,6 +13,37 @@ public sealed class FeedRepository : IWriteFeedItems
         _messageMapper = messageMapper ?? throw new ArgumentNullException(nameof(messageMapper));
     }
 
-    public Task<ProduceDeliveryResult> PublishAsync(IEnumerable<FeedItem> items, CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+    public async Task<ProduceDeliveryResult> PublishAsync(IEnumerable<FeedItem> items, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        IReadOnlyCollection<FeedKafkaMessage> messages = await _messageMapper
+            .MapMessagesAsync(items, cancellationToken)
+            .ConfigureAwait(false);
+
+        int attemptedCount = 0;
+        int deliveredCount = 0;
+        int failedCount = 0;
+
+        foreach (FeedKafkaMessage message in messages)
+        {
+            attemptedCount++;
+
+            try
+            {
+                await _kafkaProducer
+                    .ProduceAsync(message.Key, message.Payload, cancellationToken)
+                    .ConfigureAwait(false);
+
+                deliveredCount++;
+            }
+            catch (InvalidOperationException)
+            {
+                failedCount++;
+            }
+        }
+
+        return new ProduceDeliveryResult(attemptedCount, deliveredCount, failedCount);
+    }
 }
