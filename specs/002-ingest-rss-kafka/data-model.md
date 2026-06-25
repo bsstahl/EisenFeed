@@ -25,20 +25,29 @@
   - `ItemId` must be deterministic for equivalent source item.
   - Required text fields must be trimmed and non-empty where required.
 
-## Entity: IngestedItemRecord
+## Entity: FeedItemIngestion
 
 - Purpose: Persistent idempotency record proving a feed item has already been ingested.
 - Fields:
   - `FeedId` (string, required)
   - `ItemId` (string, required)
-  - `IngestedAt` (datetimeoffset, required)
+  - `Status` (enum: `Publishing`, `Published`, `Failed`, required)
+  - `PublishAttemptedAt` (datetimeoffset, required)
+  - `IngestedAt` (datetimeoffset, optional, required when `Status = Published`)
+  - `AttemptCount` (int >= 1, required)
+  - `LastError` (string, optional)
   - `KafkaMessageKey` (string, required)
+  - `KafkaTopic` (string, optional, required when `Status = Published`)
+  - `KafkaPartition` (int, optional, required when `Status = Published`)
+  - `KafkaOffset` (long, optional, required when `Status = Published`)
   - `RunId` (string/UUID, required)
 - Validation Rules:
   - Unique constraint on `(FeedId, ItemId)`.
   - `KafkaMessageKey` must match `FeedId:ItemId` format.
+  - `Status = Published` requires `IngestedAt`, `KafkaTopic`, `KafkaPartition`, and `KafkaOffset`.
+  - `AttemptCount` increments on each publish attempt.
 
-## Entity: IngestionRunResult
+## Entity: FeedIngestion
 
 - Purpose: Operational summary for one ingestion execution.
 - Fields:
@@ -58,8 +67,8 @@
 ## Relationships
 
 - `FeedSource` 1-to-many `FeedItem` (discovery context).
-- `FeedItem` 1-to-1 `IngestedItemRecord` by `(FeedId, ItemId)` for idempotency.
-- `IngestionRunResult` 1-to-many `IngestedItemRecord` via `RunId`.
+- `FeedItem` 1-to-1 `FeedItemIngestion` by `(FeedId, ItemId)` for idempotency.
+- `FeedIngestion` 1-to-many `FeedItemIngestion` via `RunId`.
 
 ## State Transitions
 
@@ -67,6 +76,11 @@
   - `Discovered` -> `Skipped` (already ingested)
   - `Discovered` -> `Ingested` -> `Published`
   - `Discovered` -> `Failed` (with retry in later run)
+
+- Idempotency record lifecycle:
+  - `Publishing` -> `Published` after Kafka ack and confirmation write.
+  - `Publishing` -> `Failed` when publish or confirmation fails.
+  - `Failed` -> `Publishing` on retry.
 
 - Run lifecycle:
   - `Started` -> `Succeeded` when `FailedCount = 0`

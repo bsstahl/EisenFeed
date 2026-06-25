@@ -5,5 +5,8 @@
   <Project Path="src/EisenFeed.AppHost/EisenFeed.AppHost.csproj" />
   <Folder Name="/src/">
     <Project Path="src/EisenFeed.Core/EisenFeed.Core.csproj" />
+    <Project Path="src/EisenFeed.Ingestion.Consume.Rss/EisenFeed.Ingestion.Consume.Rss.csproj" />
+    <Project Path="src/EisenFeed.Ingestion.Produce.Kafka/EisenFeed.Ingestion.Produce.Kafka.csproj" />
+    <Project Path="src/EisenFeed.Ingestion.Transform.Parser/EisenFeed.Ingestion.Transform.Parser.csproj" />
   </Folder>
 </Solution>

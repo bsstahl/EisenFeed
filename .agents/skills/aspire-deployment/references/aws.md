@@ -8,7 +8,7 @@ AWS deployment is currently a preview path driven by the AWS Aspire integrations
 
 Use the AWS Aspire integrations repository for AWS-specific deployment guidance:
 
-https://github.com/aws/integrations-on-dotnet-aspire-for-aws
+<https://github.com/aws/integrations-on-dotnet-aspire-for-aws>
 
 Use these repository docs when available:
 

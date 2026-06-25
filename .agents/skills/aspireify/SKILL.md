@@ -117,8 +117,8 @@ copy is present and **defer to it**. The plugin version is the fallback.
 
 | Requirement | Install |
 |-------------|---------|
-| .NET 10.0 SDK (C# AppHost) | https://dotnet.microsoft.com/download |
-| Node.js 20+ (TS AppHost) | https://nodejs.org |
+| .NET 10.0 SDK (C# AppHost) | <https://dotnet.microsoft.com/download> |
+| Node.js 20+ (TS AppHost) | <https://nodejs.org> |
 | Aspire CLI | `curl -sSL https://aspire.dev/install.sh \| bash` or `dotnet tool install -g Aspire.Cli` |
 | Skeleton already dropped | `aspire init` produced `aspire.config.json` + AppHost stub |
 

@@ -12,7 +12,7 @@
 
 ### User Story 1 - Ingest New Feed Items Reliably (Priority: P1)
 
-As an operator, I can run ingestion for one configured RSS feed so that newly published items are captured and made available for downstream processing with at-least-once delivery semantics.
+As a reader, I can run ingestion for one configured RSS feed so that newly published items are captured and made available for downstream processing with at-least-once delivery semantics.
 
 **Why this priority**: This is the core business outcome: collecting feed items reliably for later processing while minimizing duplicate work through idempotency safeguards.
 
@@ -27,7 +27,7 @@ As an operator, I can run ingestion for one configured RSS feed so that newly pu
 
 ### User Story 2 - Safe Re-Runs After Failures (Priority: P2)
 
-As an operator, I can re-run ingestion after interruptions or transient failures so that ingestion completes with at-least-once delivery while minimizing duplicates.
+As a reader, I can re-run ingestion after interruptions or transient failures so that ingestion completes with at-least-once delivery while minimizing duplicates.
 
 **Why this priority**: Operational resilience is required for scheduled or manually retried ingestion jobs.
 
@@ -42,7 +42,7 @@ As an operator, I can re-run ingestion after interruptions or transient failures
 
 ### User Story 3 - Observable Ingestion Outcome (Priority: P3)
 
-As an operator, I can view ingestion results for each run so that I can confirm how many items were discovered, ingested, skipped, and failed.
+As a reader, I can view ingestion results for each run so that I can confirm how many items were discovered, ingested, skipped, and failed.
 
 **Why this priority**: Visibility improves trust, troubleshooting speed, and operational readiness.
 
@@ -50,7 +50,7 @@ As an operator, I can view ingestion results for each run so that I can confirm 
 
 **Acceptance Scenarios**:
 
-1. **Given** an ingestion run completes, **When** the operator checks run results, **Then** a summary is available showing total discovered items, ingested items, skipped already-ingested items, and failures.
+1. **Given** an ingestion run completes, **When** the reader checks run results, **Then** a summary is available showing total discovered items, ingested items, skipped already-ingested items, and failures.
 
 ### Edge Cases
 
@@ -89,8 +89,8 @@ As an operator, I can view ingestion results for each run so that I can confirm 
 
 - **Feed Source**: Represents the single RSS feed configuration used by ingestion, including location and ingestion enablement state.
 - **Feed Item**: Represents one item discovered in the RSS feed, including a stable identity and content metadata needed for downstream processing.
-- **Ingested Item Record**: Represents a persisted record proving a feed item identity has already been ingested, used for idempotency checks.
-- **Ingestion Run Result**: Represents per-run operational outcomes, including discovered, ingested, skipped, and failed counts plus run status.
+- **Feed Item Ingestion**: Represents a persisted record proving a feed item identity has already been ingested, used for idempotency checks.
+- **Feed Ingestion**: Represents per-run operational outcomes, including discovered, ingested, skipped, and failed counts plus run status.
 
 ### Architecture Components
 
@@ -107,7 +107,7 @@ As an operator, I can view ingestion results for each run so that I can confirm 
 - **SC-001**: 100% of valid newly discovered items are eventually delivered to Kafka (at-least-once).
 - **SC-002**: For a stable feed with no new items, repeated ingestion runs produce zero new ingested records and expose duplicate-delivery counts when retries occur.
 - **SC-003**: For feeds that contain new items, at least 99% of valid newly discovered items are available for downstream processing within one ingestion run.
-- **SC-004**: Operators can confirm ingestion outcome from run summary data within 2 minutes of run completion.
+- **SC-004**: Readers can confirm ingestion outcome from run summary data within 2 minutes of run completion.
 
 ## Assumptions
 

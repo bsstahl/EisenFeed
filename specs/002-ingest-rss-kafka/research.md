@@ -69,3 +69,19 @@
 - Alternatives considered:
   - Single library with folders only: rejected because package-level boundaries improve ownership and deployment clarity.
   - Multiple Aspire nodes for each stage: rejected for this increment due to unnecessary operational complexity.
+
+## Decision 10: Dual-Write Consistency Strategy (Kafka + Idempotency Store)
+
+- Decision: Use per-item processing with explicit publish-state transitions in the idempotency store:
+  - record publish attempt state,
+  - publish one item to Kafka,
+  - confirm publish state with Kafka metadata.
+- Rationale: Cross-system transactional commit is not available between Kafka and the ACID idempotency store. A per-item workflow bounds inconsistency and duplicate exposure to at most one in-flight item rather than a whole feed batch.
+- Operational rules:
+  - Process items one-at-a-time for produce plus idempotency confirmation.
+  - Publish to Kafka before marking the item fully published to preserve at-least-once semantics.
+  - If confirmation write fails after Kafka publish, stop the run and surface failure for controlled retry.
+- Alternatives considered:
+  - Batch publish then batch DB confirmation: rejected because confirmation failure can duplicate an entire feed on retry.
+  - Kafka-only idempotency with no store: rejected because pre-publish existence checks and durable run accounting are not reliable enough.
+  - Exactly-once cross-system transactions: rejected for this increment due to high implementation and operational complexity.

@@ -10,7 +10,8 @@ Ingest one configured RSS feed and publish newly discovered feed items to a Kafk
 at-least-once delivery semantics. The approach is to derive a stable item identity, persist
 ingestion state with a uniqueness constraint for best-effort skip behavior, and publish a canonical
 feed-item message contract to Kafka using the item identity as the message key for downstream
-idempotent processing.
+idempotent processing. Because Kafka plus idempotency store writes are a dual-write boundary,
+produce plus idempotency confirmation is processed per item to bound duplicate exposure.
 
 ## Technical Context
 
@@ -28,7 +29,7 @@ idempotent processing.
 
 **Performance Goals**: Complete a single-feed ingestion run within 30 seconds for feeds up to 5,000 items; duplicate detection O(1) by key lookup/constraint
 
-**Constraints**: At-least-once delivery guarantee; best-effort duplicate prevention; explicit fetch/parse/produce separation; repository pattern for fetch/produce; strategy pattern for parser; continue-on-item-failure; Kafka handoff contract stability; production code under `src/`, tests under `tst/`
+**Constraints**: At-least-once delivery guarantee; best-effort duplicate prevention; explicit fetch/parse/produce separation; repository pattern for fetch/produce; strategy pattern for parser; continue-on-item-failure; Kafka handoff contract stability; dual-write guardrails with per-item publish/confirm sequencing; production code under `src/`, tests under `tst/`
 
 **Scale/Scope**: Single feed source, one Kafka topic, one ingestion pipeline with four internal libraries; multi-feed orchestration out of scope
 
@@ -59,6 +60,7 @@ specs/002-ingest-rss-kafka/
 ```
 
 ### Source Code (repository root)
+
 ```text
 src/
 ├── EisenFeed.Core/
@@ -85,11 +87,11 @@ src/
 tst/
 ├── EisenFeed.Core.Tests/
 └── EisenFeed.Ingestion.Tests/
-	├── Consume/
-	├── Transform/
-	├── Produce/
-	├── Orchestration/
-	└── Integration/
+ ├── Consume/
+ ├── Transform/
+ ├── Produce/
+ ├── Orchestration/
+ └── Integration/
 ```
 
 **Structure Decision**: Implement CTP as four separate libraries (`Consume.Rss`, `Transform.Parser`,

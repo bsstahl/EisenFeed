@@ -13,6 +13,7 @@ The `Aspire.Hosting.JavaScript` package provides three resource types. Pick the 
 | App has a specific Node entry file (`.js`/`.ts`) and uses a dev script like `ts-node-dev` | `AddNodeApp(name, dir, "entry.js")` + `.WithRunScript("start:dev")` | Express/Fastify API, Socket.IO server |
 
 **Key distinctions:**
+
 - `AddNodeApp` is for apps that run a **specific file** with Node (e.g., an Express server at `src/index.ts`). Use `.WithRunScript("start:dev")` to override the dev-time command (e.g., `ts-node-dev`).
 - `AddJavaScriptApp` runs a **package.json script** — simpler, good when the script handles everything.
 - `AddViteApp` is `AddJavaScriptApp` with Vite-specific defaults (auto-HTTPS config augmentation, `dev` as default script).

@@ -20,6 +20,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\EisenFeed.Core\EisenFeed.Core.csproj" />
+    <ProjectReference Include="..\..\src\EisenFeed.Ingestion.Consume.Rss\EisenFeed.Ingestion.Consume.Rss.csproj" />
+    <ProjectReference Include="..\..\src\EisenFeed.Ingestion.Transform.Parser\EisenFeed.Ingestion.Transform.Parser.csproj" />
+    <ProjectReference Include="..\..\src\EisenFeed.Ingestion.Produce.Kafka\EisenFeed.Ingestion.Produce.Kafka.csproj" />
   </ItemGroup>
 
 </Project>

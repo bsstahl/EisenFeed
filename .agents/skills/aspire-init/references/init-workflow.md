@@ -1,7 +1,7 @@
 # `aspire init` Workflow
 
 Reference for the `aspire init` flow on existing repositories. Source:
-https://aspire.dev/reference/cli/commands/aspire-init/.
+<https://aspire.dev/reference/cli/commands/aspire-init/>.
 
 ## What `aspire init` Does
 
@@ -73,9 +73,11 @@ C# has two sub-modes the agent may encounter:
 1. **Pre-flight** — verify no AppHost already exists. If one does, stop and route to
    `aspireify` or `aspire-orchestration`.
 2. **Run init**:
+
    ```bash
    aspire init --language <csharp|typescript> --non-interactive
    ```
+
 3. **Confirm artifacts** — `apphost.cs` (or `apphost.ts` + `.aspire/modules/`) and
    `aspire.config.json` should be in the repo root.
 4. **Confirm `aspireify` skill installed** — the agent's skill directory contains

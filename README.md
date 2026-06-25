@@ -151,8 +151,8 @@ Next step to fully wire Aspire resources:
 - Production code MUST live under `src/`.
 - Test code MUST live under `tst/`.
 - New projects should follow this pattern:
-	- `src/<ProjectName>/...`
-	- `tst/<ProjectName>.Tests/...`
+ 	- `src/<ProjectName>/...`
+ 	- `tst/<ProjectName>.Tests/...`
 
 ## 📦 Status
 

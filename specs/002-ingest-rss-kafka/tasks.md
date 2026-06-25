@@ -32,14 +32,14 @@
 
 **Independent Test**: Tests fail initially and encode expected behavior for fetch repository abstraction, parser strategy over synthetic XML, and producer repository behavior with canonical `FeedItem` inputs.
 
-- [ ] T006 [P] [US1] Create fetch repository unit tests for successful RSS retrieval in tst/EisenFeed.Ingestion.Tests/Consume/RssFeedFetchRepositoryTests.cs
-- [ ] T007 [P] [US1] Create fetch repository unit tests for feed-level failures/timeouts in tst/EisenFeed.Ingestion.Tests/Consume/RssFeedFetchRepositoryFailureTests.cs
-- [ ] T008 [P] [US1] Create parser strategy unit tests using synthetic XML for valid itemization in tst/EisenFeed.Ingestion.Tests/Transform/RssXmlParserStrategyTests.cs
-- [ ] T009 [P] [US1] Create parser strategy unit tests using synthetic XML for malformed item handling in tst/EisenFeed.Ingestion.Tests/Transform/RssXmlParserStrategyMalformedXmlTests.cs
-- [ ] T010 [P] [US1] Create parser strategy selector tests for strategy pattern dispatch in tst/EisenFeed.Ingestion.Tests/Transform/FeedParserStrategySelectorTests.cs
-- [ ] T011 [P] [US1] Create producer repository unit tests with canonical FeedItems for key/payload mapping in tst/EisenFeed.Ingestion.Tests/Produce/KafkaFeedProduceRepositoryMappingTests.cs
-- [ ] T012 [P] [US1] Create producer repository unit tests with canonical FeedItems for ack/error handling in tst/EisenFeed.Ingestion.Tests/Produce/KafkaFeedProduceRepositoryDeliveryTests.cs
-- [ ] T013 [US1] Add initial red-test execution notes for US1 in specs/002-ingest-rss-kafka/checklists/requirements.md
+- [x] T006 [P] [US1] Create fetch repository unit tests for successful RSS retrieval in tst/EisenFeed.Ingestion.Tests/Consume/RssFeedFetchRepositoryTests.cs
+- [x] T007 [P] [US1] Create fetch repository unit tests for feed-level failures/timeouts in tst/EisenFeed.Ingestion.Tests/Consume/RssFeedFetchRepositoryFailureTests.cs
+- [x] T008 [P] [US1] Create parser strategy unit tests using synthetic XML for valid itemization in tst/EisenFeed.Ingestion.Tests/Transform/RssXmlParserStrategyTests.cs
+- [x] T009 [P] [US1] Create parser strategy unit tests using synthetic XML for malformed item handling in tst/EisenFeed.Ingestion.Tests/Transform/RssXmlParserStrategyMalformedXmlTests.cs
+- [x] T010 [P] [US1] Create parser strategy selector tests for strategy pattern dispatch in tst/EisenFeed.Ingestion.Tests/Transform/FeedParserStrategySelectorTests.cs
+- [x] T011 [P] [US1] Create producer repository unit tests with canonical FeedItems for key/payload mapping in tst/EisenFeed.Ingestion.Tests/Produce/KafkaFeedProduceRepositoryMappingTests.cs
+- [x] T012 [P] [US1] Create producer repository unit tests with canonical FeedItems for ack/error handling in tst/EisenFeed.Ingestion.Tests/Produce/KafkaFeedProduceRepositoryDeliveryTests.cs
+- [x] T013 [US1] Add initial red-test execution notes for US1 in specs/002-ingest-rss-kafka/checklists/requirements.md
 
 ---
 
@@ -74,9 +74,9 @@
 
 **Purpose**: Enforce explicit user approval before creating or editing production code under `src/`.
 
-- [ ] T023 Obtain explicit user approval in specs/002-ingest-rss-kafka/tasks.md before starting any production code tasks in src/
+- [x] T023 Obtain explicit user approval in specs/002-ingest-rss-kafka/tasks.md before starting any production code tasks in src/
 
-**Checkpoint**: STOP. Do not execute any production code task until T023 is completed with explicit user approval.
+**Checkpoint**: APPROVED 2026-06-24 — user requested stub implementations to produce meaningful NotImplementedException test failures.
 
 ---
 
@@ -84,9 +84,9 @@
 
 **Purpose**: Create the four-library architecture and the service host required by FR-019 and FR-020.
 
-- [ ] T024 Create consume library project in src/EisenFeed.Ingestion.Consume.Rss/EisenFeed.Ingestion.Consume.Rss.csproj
-- [ ] T025 [P] Create transform library project in src/EisenFeed.Ingestion.Transform.Parser/EisenFeed.Ingestion.Transform.Parser.csproj
-- [ ] T026 [P] Create produce library project in src/EisenFeed.Ingestion.Produce.Kafka/EisenFeed.Ingestion.Produce.Kafka.csproj
+- [x] T024 Create consume library project in src/EisenFeed.Ingestion.Consume.Rss/EisenFeed.Ingestion.Consume.Rss.csproj
+- [x] T025 [P] Create transform library project in src/EisenFeed.Ingestion.Transform.Parser/EisenFeed.Ingestion.Transform.Parser.csproj
+- [x] T026 [P] Create produce library project in src/EisenFeed.Ingestion.Produce.Kafka/EisenFeed.Ingestion.Produce.Kafka.csproj
 - [ ] T027 [P] Create orchestration library project in src/EisenFeed.Ingestion.Orchestration/EisenFeed.Ingestion.Orchestration.csproj
 - [ ] T028 Create ingestion host service project in src/EisenFeed.Ingestion.Service/EisenFeed.Ingestion.Service.csproj
 - [ ] T029 Wire project references and solution entries in EisenFeed.slnx

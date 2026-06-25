@@ -28,7 +28,7 @@ metadata:
 
 | Requirement | Install |
 |-------------|---------|
-| .NET 10.0 SDK | https://dotnet.microsoft.com/download |
+| .NET 10.0 SDK | <https://dotnet.microsoft.com/download> |
 | Aspire CLI (curl installer) | `curl -sSL https://aspire.dev/install.sh \| bash` |
 | Aspire CLI (NativeAOT global tool) | `dotnet tool install -g Aspire.Cli` (.NET 10 required) |
 | Diagnose missing prerequisites | `aspire doctor` |
@@ -73,9 +73,11 @@ For brand-new projects in an empty or non-existent directory:
 1. Confirm prerequisites with `aspire doctor` if the CLI install is uncertain.
 2. Pick a template from [references/templates.md](references/templates.md).
 3. Run the template, append `--non-interactive` for agent flows:
+
    ```bash
    aspire new aspire-starter --name MyApp --output ./MyApp --non-interactive
    ```
+
 4. The new directory is fully wired by the template — **no aspireify handoff needed**.
 5. Route to [`aspire-orchestration`](../aspire-orchestration/SKILL.md) for first run
    (`aspire start`).
@@ -87,11 +89,13 @@ and need an AppHost added alongside them:
 
 1. Verify the [Detection](#detection) table — confirm **no** AppHost is present.
 2. Run `aspire init`, choosing language explicitly for non-interactive flows:
+
    ```bash
    aspire init --language csharp --non-interactive
    # or
    aspire init --language typescript --non-interactive
    ```
+
 3. `aspire init` drops:
    - The AppHost skeleton (`apphost.cs` with `#:sdk` directives, **or** `apphost.ts` with the
      generated `.aspire/modules/` folder)

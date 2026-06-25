@@ -86,12 +86,14 @@ the bootstrap skills (`aspire-init` / `aspireify`) or to a runtime sub-skill:
 ## Sub-Skills
 
 ### aspire-init
+
 First-run flow only. Owns the skeleton drop for repos that do **not** yet have an AppHost —
 picks `aspire new <template>` (greenfield) or `aspire init` (existing repo), runs the CLI,
 and hands off to `aspireify` for the actual wiring. Self-deactivates once the skeleton is in
 place. Do **not** use it on a repo that already contains an AppHost.
 
 ### aspireify
+
 Agentic AppHost wiring after `aspire init` lands the skeleton. Scans the repo, proposes a
 resource graph (Postgres / Redis / Rabbit / etc.), edits the AppHost (C#, file-based C#, or
 TypeScript), wires `Aspire.ServiceDefaults` + OTel, validates with `aspire start`, then
@@ -100,18 +102,21 @@ self-deactivates. Owns current AppHost authoring patterns (`AddNextJsApp`, `AddV
 endpoint references, and config/secret migration).
 
 ### aspire-orchestration
+
 Lifecycle management: start, stop, wait, resource commands, default watch/HMR guidance, and file-lock recovery.
 Safety guardrails that prevent agent self-harm. Owns `aspire ps` / `aspire describe` /
 `--include-hidden` inspection and CLI upgrades (`aspire update --self`). Does **not** edit
 AppHost code — defers to `aspireify` for wiring.
 
 ### aspire-deployment
+
 Multi-target deployment and tear-down: `aspire deploy`, `aspire publish`, `aspire destroy`,
 `aspire do <step>`. Targets: Azure Container Apps, App Service, AKS, Kubernetes (Helm),
 Docker Compose. Owns current deployment surfaces (Front Door, NSP, AKS hosting, Foundry
 `AddPromptAgent`, JS `PublishAs*`, `--pipeline-log-level`) and 13.4 API naming.
 
 ### aspire-monitoring
+
 Observability: `aspire logs`, `aspire otel`, `aspire describe`, `aspire export`,
 `aspire dashboard run`. Routes between local Aspire CLI diagnostics, AKS workload tooling,
 and deployed-Azure platform tools. Surfaces dashboard features (notification center,
@@ -136,7 +141,7 @@ active.
 
 | Requirement | Install |
 |-------------|---------|
-| .NET 10.0 SDK | https://dotnet.microsoft.com/download |
+| .NET 10.0 SDK | <https://dotnet.microsoft.com/download> |
 | Aspire CLI (curl/PowerShell) | `curl -sSL https://aspire.dev/install.sh \| bash` |
 | Aspire CLI (NativeAOT global tool, .NET 10) | `dotnet tool install -g Aspire.Cli` |
 
