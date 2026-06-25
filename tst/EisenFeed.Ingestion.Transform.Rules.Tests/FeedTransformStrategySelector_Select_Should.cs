@@ -2,7 +2,7 @@ using EisenFeed.Core.Contracts;
 using EisenFeed.Ingestion.Transform.Rules;
 using Xunit.Abstractions;
 
-namespace EisenFeed.Ingestion.Transform.Rules.Tests.Transform;
+namespace EisenFeed.Ingestion.Transform.Rules.Tests;
 
 [Trait("TestType", "Unit")]
 [Trait("Phase", "Transform")]

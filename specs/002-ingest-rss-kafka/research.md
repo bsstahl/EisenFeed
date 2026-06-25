@@ -52,7 +52,7 @@
 - Decision: Split ingestion into three explicit stages: retrieve/canonicalize, transform, and produce.
 - Rationale: Stage boundaries allow highly focused tests, including source-adapter retrieval tests, canonical transformation tests, and producer tests driven by canonical `FeedItem` inputs.
 - Alternatives considered:
-  - Single monolithic ingestion method: rejected because it makes parser and producer testing brittle and highly coupled.
+  - Single monolithic ingestion method: rejected because it makes transform and producer testing brittle and highly coupled.
 
 ## Decision 8: Architectural Patterns per Stage
 

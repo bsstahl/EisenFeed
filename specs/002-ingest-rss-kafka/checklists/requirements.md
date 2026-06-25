@@ -32,5 +32,5 @@
 ## Notes
 
 - Validation completed in one pass; no open clarification markers or blocking quality gaps.
-- US1 red-test checkpoint (Phase 2): `dotnet test tst/EisenFeed.Ingestion.Tests/EisenFeed.Ingestion.Tests.csproj` fails at compile-time because planned production namespaces/types are not implemented yet (expected in strict test-first flow).
-- Missing symbols include planned stage components under `EisenFeed.Ingestion.Consume.Rss`, `EisenFeed.Ingestion.Transform.Parser`, and `EisenFeed.Ingestion.Produce.Kafka`.
+- US1 red-test checkpoint (Phase 2): `dotnet test tst/EisenFeed.Ingestion.Consume.Rss.Tests/EisenFeed.Ingestion.Consume.Rss.Tests.csproj`, `dotnet test tst/EisenFeed.Ingestion.Transform.Rules.Tests/EisenFeed.Ingestion.Transform.Rules.Tests.csproj`, and `dotnet test tst/EisenFeed.Ingestion.Produce.Kafka.Tests/EisenFeed.Ingestion.Produce.Kafka.Tests.csproj` fail at compile-time before production code is implemented (expected in strict test-first flow).
+- Missing symbols include planned stage components under `EisenFeed.Ingestion.Consume.Rss`, `EisenFeed.Ingestion.Transform.Rules`, and `EisenFeed.Ingestion.Produce.Kafka`.

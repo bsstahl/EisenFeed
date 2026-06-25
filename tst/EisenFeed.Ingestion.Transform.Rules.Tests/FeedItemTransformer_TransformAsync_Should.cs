@@ -4,7 +4,7 @@ using EisenFeed.Ingestion.Transform.Rules;
 using EisenFeed.Ingestion.Transform.Rules.Tests.Common;
 using Xunit.Abstractions;
 
-namespace EisenFeed.Ingestion.Transform.Rules.Tests.Transform;
+namespace EisenFeed.Ingestion.Transform.Rules.Tests;
 
 [Trait("TestType", "Unit")]
 [Trait("Phase", "Transform")]

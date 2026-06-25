@@ -4,7 +4,7 @@ using EisenFeed.Ingestion.Consume.Rss;
 using System.Net;
 using Xunit.Abstractions;
 
-namespace EisenFeed.Ingestion.Consume.Rss.Tests.Consume;
+namespace EisenFeed.Ingestion.Consume.Rss.Tests;
 
 [Trait("TestType", "Unit")]
 [Trait("Phase", "Consume")]

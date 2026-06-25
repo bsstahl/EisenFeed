@@ -4,7 +4,7 @@ using EisenFeed.Ingestion.Produce.Kafka;
 using EisenFeed.Ingestion.Produce.Kafka.Tests.Common;
 using Xunit.Abstractions;
 
-namespace EisenFeed.Ingestion.Produce.Kafka.Tests.Produce;
+namespace EisenFeed.Ingestion.Produce.Kafka.Tests;
 
 [Trait("TestType", "Unit")]
 [Trait("Phase", "Produce")]

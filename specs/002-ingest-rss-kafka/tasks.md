@@ -18,11 +18,11 @@
 
 **Purpose**: Prepare test infrastructure under `tst/` without adding production code.
 
-- [x] T001 Create ingestion test project scaffold in tst/EisenFeed.Ingestion.Tests/EisenFeed.Ingestion.Tests.csproj
-- [x] T002 Add test project to solution in EisenFeed.slnx
-- [x] T003 [P] Create shared test fixtures folder and base fixture in tst/EisenFeed.Ingestion.Tests/Common/IngestionTestFixture.cs
-- [x] T004 [P] Add XML test payload fixtures for parser strategy tests in tst/EisenFeed.Ingestion.Tests/TestData/Rss/
-- [x] T005 [P] Add canonical FeedItem fixture builders for producer tests in tst/EisenFeed.Ingestion.Tests/Common/CanonicalFeedItemFactory.cs
+- [x] T001 Create ingestion test project scaffolds in tst/EisenFeed.Ingestion.Consume.Rss.Tests/EisenFeed.Ingestion.Consume.Rss.Tests.csproj, tst/EisenFeed.Ingestion.Produce.Kafka.Tests/EisenFeed.Ingestion.Produce.Kafka.Tests.csproj, and tst/EisenFeed.Ingestion.Transform.Rules.Tests/EisenFeed.Ingestion.Transform.Rules.Tests.csproj
+- [x] T002 Add test projects to solution in EisenFeed.slnx
+- [x] T003 [P] Create per-project test fixtures in tst/EisenFeed.Ingestion.Produce.Kafka.Tests/Common/IngestionTestFixture.cs and tst/EisenFeed.Ingestion.Transform.Rules.Tests/Common/IngestionTestFixture.cs
+- [x] T004 [P] Add XML/canonical test payload fixtures for transform rules tests in tst/EisenFeed.Ingestion.Transform.Rules.Tests/TestData/Rss/
+- [x] T005 [P] Add canonical FeedItem fixture builders for stage-specific tests in tst/EisenFeed.Ingestion.Produce.Kafka.Tests/Common/CanonicalFeedItemFactory.cs and tst/EisenFeed.Ingestion.Transform.Rules.Tests/Common/CanonicalFeedItemFactory.cs
 
 ---
 
@@ -32,13 +32,13 @@
 
 **Independent Test**: Tests fail initially and encode expected behavior for retrieve repository abstraction with source-to-canonical mapping, transform strategy over canonical `FeedItem` inputs, and producer repository behavior with canonical `FeedItem` inputs.
 
-- [x] T006 [P] [US1] Create fetch repository unit tests for successful RSS retrieval in tst/EisenFeed.Ingestion.Tests/Consume/FeedRepositoryTests.cs
-- [x] T007 [P] [US1] Create fetch repository unit tests for feed-level failures/timeouts in tst/EisenFeed.Ingestion.Tests/Consume/FeedRepositoryFailureTests.cs
-- [x] T008 [P] [US1] Create retrieve repository unit tests for valid XML item mapping in tst/EisenFeed.Ingestion.Tests/Consume/FeedRepository_RetrieveAsync_Should.cs
-- [x] T009 [P] [US1] Create retrieve repository unit tests for malformed XML handling in tst/EisenFeed.Ingestion.Tests/Consume/FeedRepository_RetrieveAsync_Should.cs
-- [x] T010 [P] [US1] Create transform strategy selector tests for canonical-item strategy dispatch in tst/EisenFeed.Ingestion.Tests/Transform/FeedTransformStrategySelector_Select_Should.cs
-- [x] T011 [P] [US1] Create message mapper unit tests with canonical FeedItems for key/payload mapping in tst/EisenFeed.Ingestion.Tests/Produce/FeedIdItemIdMessageMapperTests.cs
-- [x] T012 [P] [US1] Create producer repository unit tests with canonical FeedItems for ack/error handling in tst/EisenFeed.Ingestion.Tests/Produce/FeedRepositoryDeliveryTests.cs
+- [x] T006 [P] [US1] Create fetch repository unit tests for successful RSS retrieval in tst/EisenFeed.Ingestion.Consume.Rss.Tests/FeedRepository_RetrieveAsync_Should.cs
+- [x] T007 [P] [US1] Create fetch repository unit tests for feed-level failures/timeouts in tst/EisenFeed.Ingestion.Consume.Rss.Tests/FeedRepository_RetrieveAsync_Should.cs
+- [x] T008 [P] [US1] Create retrieve repository unit tests for valid XML item mapping in tst/EisenFeed.Ingestion.Consume.Rss.Tests/FeedRepository_RetrieveAsync_Should.cs
+- [x] T009 [P] [US1] Create retrieve repository unit tests for malformed XML handling in tst/EisenFeed.Ingestion.Consume.Rss.Tests/FeedRepository_RetrieveAsync_Should.cs
+- [x] T010 [P] [US1] Create transform strategy selector tests for canonical-item strategy dispatch in tst/EisenFeed.Ingestion.Transform.Rules.Tests/FeedTransformStrategySelector_Select_Should.cs
+- [x] T011 [P] [US1] Create message mapper unit tests with canonical FeedItems for key/payload mapping in tst/EisenFeed.Ingestion.Produce.Kafka.Tests/FeedIdItemIdMessageMapper_MapMessagesAsync_Should.cs
+- [x] T012 [P] [US1] Create producer repository unit tests with canonical FeedItems for ack/error handling in tst/EisenFeed.Ingestion.Produce.Kafka.Tests/FeedRepository_PublishAsync_Should.cs
 - [x] T013 [US1] Add initial red-test execution notes for US1 in specs/002-ingest-rss-kafka/checklists/requirements.md
 
 ---
@@ -49,10 +49,10 @@
 
 **Independent Test**: Tests fail initially and verify safe re-runs after partial completion and transient publish failures.
 
-- [ ] T014 [P] [US2] Create orchestration unit tests for skipping already-ingested identities across reruns in tst/EisenFeed.Ingestion.Tests/Orchestration/IngestionOrchestratorIdempotencyTests.cs
-- [ ] T015 [P] [US2] Create orchestration unit tests for continue-on-item-failure semantics in tst/EisenFeed.Ingestion.Tests/Orchestration/IngestionOrchestratorContinueOnFailureTests.cs
-- [ ] T016 [P] [US2] Create integration tests for at-least-once publish behavior on retry in tst/EisenFeed.Ingestion.Tests/Integration/AtLeastOnceRetryIntegrationTests.cs
-- [ ] T017 [P] [US2] Create integration tests for duplicate-minimization with persistent ingested records in tst/EisenFeed.Ingestion.Tests/Integration/DuplicateMinimizationIntegrationTests.cs
+- [ ] T014 [P] [US2] Create orchestration unit tests for skipping already-ingested identities across reruns in tst/EisenFeed.Ingestion.Orchestration.Tests/Orchestration/IngestionOrchestratorIdempotencyTests.cs
+- [ ] T015 [P] [US2] Create orchestration unit tests for continue-on-item-failure semantics in tst/EisenFeed.Ingestion.Orchestration.Tests/Orchestration/IngestionOrchestratorContinueOnFailureTests.cs
+- [ ] T016 [P] [US2] Create integration tests for at-least-once publish behavior on retry in tst/EisenFeed.Ingestion.Orchestration.Tests/Integration/AtLeastOnceRetryIntegrationTests.cs
+- [ ] T017 [P] [US2] Create integration tests for duplicate-minimization with persistent ingested records in tst/EisenFeed.Ingestion.Orchestration.Tests/Integration/DuplicateMinimizationIntegrationTests.cs
 - [ ] T018 [US2] Add initial red-test execution notes for US2 in specs/002-ingest-rss-kafka/checklists/requirements.md
 
 ---
@@ -63,9 +63,9 @@
 
 **Independent Test**: Tests fail initially and verify discovered/ingested/skipped/failed counts and status transitions.
 
-- [ ] T019 [P] [US3] Create run summary builder unit tests for counter invariants in tst/EisenFeed.Ingestion.Tests/Orchestration/RunSummaryBuilderTests.cs
-- [ ] T020 [P] [US3] Create run summary contract serialization tests in tst/EisenFeed.Ingestion.Tests/Contracts/IngestionRunSummaryContractTests.cs
-- [ ] T021 [P] [US3] Create integration tests for mixed outcomes reporting in tst/EisenFeed.Ingestion.Tests/Integration/IngestionRunSummaryIntegrationTests.cs
+- [ ] T019 [P] [US3] Create run summary builder unit tests for counter invariants in tst/EisenFeed.Ingestion.Orchestration.Tests/Orchestration/RunSummaryBuilderTests.cs
+- [ ] T020 [P] [US3] Create run summary contract serialization tests in tst/EisenFeed.Ingestion.Orchestration.Tests/Contracts/IngestionRunSummaryContractTests.cs
+- [ ] T021 [P] [US3] Create integration tests for mixed outcomes reporting in tst/EisenFeed.Ingestion.Orchestration.Tests/Integration/IngestionRunSummaryIntegrationTests.cs
 - [ ] T022 [US3] Add initial red-test execution notes for US3 in specs/002-ingest-rss-kafka/checklists/requirements.md
 
 ---
@@ -85,7 +85,7 @@
 **Purpose**: Create the four-library architecture and the service host required by FR-019 and FR-020.
 
 - [x] T024 Create consume library project in src/EisenFeed.Ingestion.Consume.Rss/EisenFeed.Ingestion.Consume.Rss.csproj
-- [x] T025 [P] Create transform library project in src/EisenFeed.Ingestion.Transform.Parser/EisenFeed.Ingestion.Transform.Parser.csproj
+- [x] T025 [P] Create transform library project in src/EisenFeed.Ingestion.Transform.Rules/EisenFeed.Ingestion.Transform.Rules.csproj
 - [x] T026 [P] Create produce library project in src/EisenFeed.Ingestion.Produce.Kafka/EisenFeed.Ingestion.Produce.Kafka.csproj
 - [ ] T027 [P] Create orchestration library project in src/EisenFeed.Ingestion.Orchestration/EisenFeed.Ingestion.Orchestration.csproj
 - [ ] T028 Create ingestion host service project in src/EisenFeed.Ingestion.Service/EisenFeed.Ingestion.Service.csproj
@@ -99,14 +99,14 @@
 
 **Independent Test**: All US1 tests in Phase 2 pass.
 
-- [ ] T030 [P] [US1] Implement fetch repository abstraction and RSS implementation in src/EisenFeed.Ingestion.Consume.Rss/IRetrieveFeedItems.cs
-- [ ] T031 [P] [US1] Implement RSS fetch repository behavior in src/EisenFeed.Ingestion.Consume.Rss/FeedRepository.cs
-- [ ] T032 [P] [US1] Implement transform strategy interface and selector in src/EisenFeed.Ingestion.Transform.Parser/ITransformFeedItems.cs
-- [ ] T033 [P] [US1] Implement transform strategy selector in src/EisenFeed.Ingestion.Transform.Parser/FeedTransformStrategySelector.cs
-- [ ] T034 [P] [US1] Implement canonical-item transform strategy in src/EisenFeed.Ingestion.Transform.Parser/FeedItemTransformer.cs
-- [ ] T035 [P] [US1] Implement producer repository abstraction and Kafka implementation in src/EisenFeed.Ingestion.Produce.Kafka/IWriteFeedItems.cs
-- [ ] T036 [P] [US1] Implement Kafka producer repository mapping/delivery logic in src/EisenFeed.Ingestion.Produce.Kafka/FeedRepository.cs
-- [ ] T037 [US1] Run US1 tests and capture green results in specs/002-ingest-rss-kafka/checklists/requirements.md
+- [x] T030 [P] [US1] Implement retrieve repository abstraction in src/EisenFeed.Core/Contracts/IRetrieveFeedItems.cs and RSS implementation wiring in src/EisenFeed.Ingestion.Consume.Rss/FeedRepository.cs
+- [x] T031 [P] [US1] Implement RSS retrieve repository behavior in src/EisenFeed.Ingestion.Consume.Rss/FeedRepository.cs
+- [x] T032 [P] [US1] Implement transform strategy interface in src/EisenFeed.Core/Contracts/ITransformFeedItems.cs
+- [x] T033 [P] [US1] Implement transform strategy selector in src/EisenFeed.Ingestion.Transform.Rules/FeedTransformStrategySelector.cs
+- [x] T034 [P] [US1] Implement rules-based canonical-item transformer and rule contract in src/EisenFeed.Ingestion.Transform.Rules/FeedItemTransformer.cs and src/EisenFeed.Ingestion.Transform.Rules/ITransformFeedItemRule.cs
+- [x] T035 [P] [US1] Implement producer repository abstraction in src/EisenFeed.Core/Contracts/IWriteFeedItems.cs and Kafka implementation wiring in src/EisenFeed.Ingestion.Produce.Kafka/FeedRepository.cs
+- [x] T036 [P] [US1] Implement Kafka producer repository mapping/delivery logic in src/EisenFeed.Ingestion.Produce.Kafka/FeedRepository.cs
+- [x] T037 [US1] Run US1 tests and capture green results in specs/002-ingest-rss-kafka/checklists/requirements.md
 
 ---
 

@@ -29,7 +29,7 @@ produce plus idempotency confirmation is processed per item to bound duplicate e
 
 **Performance Goals**: Complete a single-feed ingestion run within 30 seconds for feeds up to 5,000 items; duplicate detection O(1) by key lookup/constraint
 
-**Constraints**: At-least-once delivery guarantee; best-effort duplicate prevention; explicit fetch/parse/produce separation; repository pattern for fetch/produce; strategy pattern for parser; continue-on-item-failure; Kafka handoff contract stability; dual-write guardrails with per-item publish/confirm sequencing; production code under `src/`, tests under `tst/`
+**Constraints**: At-least-once delivery guarantee; best-effort duplicate prevention; explicit retrieve/transform/produce separation; repository pattern for retrieve/produce; strategy pattern for rules-based transform selection; continue-on-item-failure; Kafka handoff contract stability; dual-write guardrails with per-item publish/confirm sequencing; production code under `src/`, tests under `tst/`
 
 **Scale/Scope**: Single feed source, one Kafka topic, one ingestion pipeline with four internal libraries; multi-feed orchestration out of scope
 

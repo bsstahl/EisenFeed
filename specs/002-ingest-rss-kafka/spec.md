@@ -82,7 +82,7 @@ As a reader, I can view ingestion results for each run so that I can confirm how
 - **FR-016**: The fetch step MUST be implemented behind a repository abstraction so feed retrieval can be tested and replaced independently.
 - **FR-017**: The transform step MUST use a strategy pattern or equivalent abstraction so canonical item transformation behavior can vary without changing orchestration code.
 - **FR-018**: The produce step MUST be implemented behind a repository abstraction so Kafka publishing behavior can be tested and replaced independently.
-- **FR-019**: The implementation MUST be split into four C# libraries: consume (RSS), transform (parser/itemizer), produce (Kafka repository), and orchestration.
+- **FR-019**: The implementation MUST be split into four C# libraries: consume (RSS), transform (rules-based canonical transformer), produce (Kafka repository), and orchestration.
 - **FR-020**: A single Aspire-hosted service MUST compose these four libraries into one executable ingestion pipeline for this feature increment.
 - **FR-021**: The transform step MUST be responsible for canonical-to-canonical data shaping only and MUST NOT own workflow sequencing, retry control, idempotency decisions, or run-summary accounting.
 - **FR-022**: The orchestration step MUST be responsible for workflow sequencing, idempotency checks, stop/continue behavior, retry control, and run-summary accounting, and MUST NOT own canonical item shaping rules.

@@ -38,8 +38,31 @@ dotnet build EisenFeed.slnx
 Run unit tests and integration tests (after test projects exist):
 
 ```powershell
-dotnet test
+dotnet test .\EisenFeed.slnx --logger "console;verbosity=minimal"
 ```
+
+Run tests for a specific stage library:
+
+```powershell
+dotnet test .\tst\EisenFeed.Ingestion.Consume.Rss.Tests\EisenFeed.Ingestion.Consume.Rss.Tests.csproj --logger "console;verbosity=minimal"
+dotnet test .\tst\EisenFeed.Ingestion.Transform.Rules.Tests\EisenFeed.Ingestion.Transform.Rules.Tests.csproj --logger "console;verbosity=minimal"
+dotnet test .\tst\EisenFeed.Ingestion.Produce.Kafka.Tests\EisenFeed.Ingestion.Produce.Kafka.Tests.csproj --logger "console;verbosity=minimal"
+```
+
+Collect code coverage metrics (XPlat Code Coverage collector):
+
+```powershell
+dotnet test .\EisenFeed.slnx --collect:"XPlat Code Coverage" --results-directory .\TestResults --logger "console;verbosity=minimal"
+```
+
+Coverage report output files (`coverage.cobertura.xml`) are written under:
+
+- `TestResults\<guid>\coverage.cobertura.xml` for each test project run
+
+Notes:
+
+- Test assemblies are excluded from coverage using assembly-level declarations in each test library `Assembly.cs`.
+- Coverage metrics are intended to evaluate production code under `src/`.
 
 Recommended unit-test grouping:
 
