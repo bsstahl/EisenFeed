@@ -16,13 +16,13 @@
 1. Create four libraries under `src/`:
 
  - `EisenFeed.Ingestion.Consume.Rss`
- - `EisenFeed.Ingestion.Transform.Parser`
+ - `EisenFeed.Ingestion.Transform.Rules`
  - `EisenFeed.Ingestion.Produce.Kafka`
  - `EisenFeed.Ingestion.Orchestration`
 
 2. Create `EisenFeed.Ingestion.Service` as the single Aspire-hosted runtime service.
-3. Implement fetch repository (`IReadRssFeeds`) in the consume library to retrieve raw feed payload.
-4. Implement parser strategy (`IFeedParserStrategy`) in the transform library to emit canonical feed items.
+3. Implement retrieve repository (`IRetrieveFeedItems`) in the consume library to retrieve and canonicalize source feed items.
+4. Implement transform strategy (`ITransformFeedItems`) in the transform library to apply canonical-to-canonical processing to retrieved feed items.
 5. Derive deterministic `ItemId` for each item and perform idempotency checks in orchestration.
 6. Implement produce repository (`IWriteFeedItems`) in the produce library to publish to Kafka with key `FeedId:ItemId`.
 7. Persist feed item ingestion record and run counters in orchestration.
@@ -43,9 +43,9 @@ dotnet test
 
 Recommended unit-test grouping:
 
-- Fetch repository tests: verify fetch behaviors via repository abstraction.
-- Parse tests: build synthetic XML payloads and validate itemization outcomes.
-- Parser strategy tests: ensure strategy selection and parser behavior are correct for provided XML payloads.
+- Retrieve repository tests: verify retrieval and source-to-canonical mapping behaviors via repository abstraction.
+- Transform tests: provide canonical feed items and validate canonical-to-canonical processing outcomes.
+- Transform strategy tests: ensure strategy selection and transform behavior are correct for provided canonical items.
 - Produce repository tests: pass canonical `FeedItem` instances and validate message key/payload publishing behavior.
 
 ## 5. Acceptance Checks

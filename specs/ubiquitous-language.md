@@ -117,17 +117,20 @@ prior ingestion, and publishing new items to the downstream topic.
 
 One execution of the ingestion pipeline for a single Feed. Produces a FeedIngestion.
 
-### Fetch / Fetch Step
+### Retrieve / Retrieve Step
 
-The **Consume** stage of the CTP pipeline for the Ingestion Service. Retrieves the raw Feed
-payload (RSS/XML) from the external source. Implemented via a Fetch Repository.
+The **Consume** stage of the CTP pipeline for the Ingestion Service. Retrieves source-native feed
+content and translates it into canonical `FeedItem` instances. Implemented via a Retrieve Repository.
 
-### Parse / Parse Step
+### Transform / Transform Step
 
-The **Transform** stage of the CTP pipeline for the Ingestion Service. Accepts a raw Feed payload
-and emits a collection of Canonical Feed Items — one per entry in the feed. Each FeedItem produced
-carries both feed-level data (FeedId) and item-level data (ItemId, Title, PublishedAt, Content).
-Implemented via a Parser Strategy.
+The **Transform** stage of the CTP pipeline for the Ingestion Service. Accepts canonical `FeedItem`
+instances and applies canonical-to-canonical policy, normalization, enrichment, and recovery rules.
+Implemented via a Transform Strategy.
+
+Transform changes the data, but does not control workflow. A Transform component SHOULD be testable as
+`FeedItem -> FeedItem` behavior without requiring orchestration state, retries, persistence decisions,
+or external publication concerns.
 
 ### Behavioral Layer
 
@@ -144,8 +147,12 @@ to the downstream Kafka Topic as Feed Item Ingested messages. Implemented via a 
 
 ### Orchestration / Orchestrator
 
-The component that sequences Fetch → Parse → idempotency check → Produce, accumulates run counters,
+The component that sequences Retrieve → Transform → idempotency check → Produce, accumulates run counters,
 and returns the Feed Ingestion summary. Does not perform I/O directly.
+
+Orchestration controls the workflow, but does not own canonical item shaping rules. It decides what
+happens next, under what conditions, and with what stop/continue behavior. Sequencing, idempotency,
+retry control, counter accounting, and terminal failure handling belong here rather than in Transform.
 
 ### CTP Pipeline / Consume-Transform-Produce
 
@@ -225,7 +232,7 @@ downstream deduplication.
 The Kafka message produced for each newly ingested FeedItem. Schema includes `schemaVersion`,
 `eventType`, `runId`, `occurredAt`, `feedId`, `itemId`, `publishedAt`, `title`, and `content`.
 
-### Delivery Result / ProduceDeliveryResult
+### Delivery Result / DeliveryResult
 
 The outcome record from one Produce Stage invocation: AttemptedCount, DeliveredCount, FailedCount.
 
@@ -268,20 +275,21 @@ The terminal state of an Ingestion Run:
 
 ## Architectural Patterns
 
-### Fetch Repository / IReadRssFeeds
+### Retrieve Repository / IRetrieveFeedItems
 
-The repository abstraction over the Fetch Stage. Decouples HTTP/network concerns from orchestration
-and parsing. Concrete implementation: `FeedRepository` in `EisenFeed.Ingestion.Consume.Rss`.
+The repository abstraction over the Retrieve Stage. Decouples source-specific retrieval concerns from
+orchestration and downstream transformation. Concrete implementation: `FeedRepository` in `EisenFeed.Ingestion.Consume.Rss`.
 
-### Parser Strategy / IFeedParserStrategy
+### Transform Strategy / ITransformFeedItems
 
-The strategy abstraction for the Parse Step. A single strategy accepts a raw Feed payload and a
-FeedId and returns Canonical Feed Items. Concrete implementation: `RssXmlParserStrategy`.
+The strategy abstraction for the Transform Step. A single strategy accepts canonical feed items or
+equivalent canonical transformation inputs and returns transformed canonical items. The current concrete
+implementation applies canonical-to-canonical transformation behavior.
 
-### Parser Strategy Selector / FeedParserStrategySelector
+### Transform Strategy Selector / FeedTransformStrategySelector
 
-The component that selects the appropriate Parser Strategy for a given content type. Throws
-`NotSupportedException` for unknown content types.
+The component that selects the appropriate Transform Strategy for a given profile or transform mode. Throws
+`NotSupportedException` for unknown transform profiles.
 
 ### Produce Repository / IWriteFeedItems
 
@@ -313,18 +321,18 @@ interface definitions for all subsystems. Has no infrastructure dependencies.
 
 ### EisenFeed.Ingestion.Consume.Rss
 
-The library implementing the Fetch Stage. Depends only on `EisenFeed.Core`.
+The library implementing the Retrieve Stage. Depends only on `EisenFeed.Core`.
 
-### EisenFeed.Ingestion.Transform.Parser
+### EisenFeed.Ingestion.Transform.Rules
 
-The library implementing the Parse Step (the Transform stage of the CTP pipeline). Contains
-`IFeedParserStrategy`, `RssXmlParserStrategy`, and `FeedParserStrategySelector`. Depends on
+The library implementing the Transform Step of the CTP pipeline. Contains
+`ITransformFeedItems`, `FeedItemTransformer`, and `FeedTransformStrategySelector`. Depends on
 `EisenFeed.Core`.
 
 ### EisenFeed.Ingestion.Produce.Kafka
 
 The library implementing the Produce Stage. Contains `IWriteFeedItems`,
-`FeedRepository`, `FeedIdItemIdMessageMapper`, and `ProduceDeliveryResult`. Depends on `EisenFeed.Core`.
+`FeedRepository` and `FeedIdItemIdMessageMapper`. Depends on `EisenFeed.Core`, including the `DeliveryResult` model.
 
 ### EisenFeed.Ingestion.Orchestration
 
@@ -350,8 +358,8 @@ being locked:
 
 | Term in use | Where used | Question |
 |---|---|---|
-| `parse/itemize` | spec FRs, research | ✅ **Resolved**: The step is called **Parse**. It is the Transform stage of CTP. The action is parsing the raw feed into individual FeedItem entities, each carrying feed-level and item-level data. |
-| `FetchAsync` | `IReadRssFeeds` | ✅ **Resolved**: Use `FetchAsync` as the canonical method name for feed retrieval via `IReadRssFeeds`. |
+| `parse/itemize` | spec FRs, research | ✅ **Resolved**: The stage is now split as **Retrieve** plus **Transform**. Retrieve translates source-native feed formats into canonical `FeedItem` entities. Transform applies canonical-to-canonical policy, normalization, and enrichment rules. |
+| `RetrieveAsync` | `IRetrieveFeedItems` | ✅ **Resolved**: Use `RetrieveAsync` as the canonical method name for feed retrieval via `IRetrieveFeedItems`. |
 | `MapMessagesAsync` | `FeedIdItemIdMessageMapper` | ✅ **Resolved**: The mapper returns correlated key/payload pairs (`FeedKafkaMessage`) to avoid positional mismatch across separate collections. |
 | `ProduceAsyncWithForcedFailure` | test + stub | ✅ **Resolved**: This is test-only and must never exist in production repositories. Failure-path testing should use test doubles in the test project. |
 | `IngestedItemRecord` | data model | ✅ **Resolved**: Canonical name is `FeedItemIngestion`. |

@@ -49,18 +49,19 @@
 
 ## Decision 7: Pipeline Stage Separation
 
-- Decision: Split ingestion into three explicit stages: fetch, parse/itemize, and produce.
-- Rationale: Stage boundaries allow highly focused tests, including synthetic XML parser tests and producer tests driven by canonical `FeedItem` inputs.
+- Decision: Split ingestion into three explicit stages: retrieve/canonicalize, transform, and produce.
+- Rationale: Stage boundaries allow highly focused tests, including source-adapter retrieval tests, canonical transformation tests, and producer tests driven by canonical `FeedItem` inputs.
 - Alternatives considered:
   - Single monolithic ingestion method: rejected because it makes parser and producer testing brittle and highly coupled.
 
 ## Decision 8: Architectural Patterns per Stage
 
-- Decision: Use repository pattern for fetch and produce stages, and strategy pattern for parse/itemize stage.
-- Rationale: Repositories isolate external I/O concerns and make fetch/produce mockable; parser strategies allow controlled variation in parsing behavior while keeping orchestration stable.
+- Decision: Use repository pattern for retrieve and produce stages, and strategy pattern for transform stage.
+- Rationale: Repositories isolate external I/O concerns and make retrieve/produce mockable; transform strategies allow controlled variation in canonical item processing behavior while keeping orchestration stable.
+- Responsibility split: Transform owns canonical-to-canonical data shaping; Orchestration owns stage sequencing, idempotency checks, retry behavior, stop/continue decisions, and run accounting.
 - Alternatives considered:
-  - Use repository for all stages: rejected because parser variation is behavioral and better modeled as strategies.
-  - Use strategy for fetch/produce: rejected because these stages are integration boundaries and better represented as repositories.
+  - Use repository for all stages: rejected because transform variation is behavioral and better modeled as strategies.
+  - Use strategy for retrieve/produce: rejected because these stages are integration boundaries and better represented as repositories.
 
 ## Decision 9: Packaging and Hosting Model
 

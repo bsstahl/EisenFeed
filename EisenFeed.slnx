@@ -1,12 +1,14 @@
 <Solution>
   <Folder Name="/tst/">
-    <Project Path="tst/EisenFeed.Ingestion.Tests/EisenFeed.Ingestion.Tests.csproj" />
+    <Project Path="tst/EisenFeed.Ingestion.Consume.Rss.Tests/EisenFeed.Ingestion.Consume.Rss.Tests.csproj" />
+    <Project Path="tst/EisenFeed.Ingestion.Produce.Kafka.Tests/EisenFeed.Ingestion.Produce.Kafka.Tests.csproj" />
+    <Project Path="tst/EisenFeed.Ingestion.Transform.Rules.Tests/EisenFeed.Ingestion.Transform.Rules.Tests.csproj" />
   </Folder>
   <Project Path="src/EisenFeed.AppHost/EisenFeed.AppHost.csproj" />
   <Folder Name="/src/">
     <Project Path="src/EisenFeed.Core/EisenFeed.Core.csproj" />
     <Project Path="src/EisenFeed.Ingestion.Consume.Rss/EisenFeed.Ingestion.Consume.Rss.csproj" />
     <Project Path="src/EisenFeed.Ingestion.Produce.Kafka/EisenFeed.Ingestion.Produce.Kafka.csproj" />
-    <Project Path="src/EisenFeed.Ingestion.Transform.Parser/EisenFeed.Ingestion.Transform.Parser.csproj" />
+    <Project Path="src/EisenFeed.Ingestion.Transform.Rules/EisenFeed.Ingestion.Transform.Rules.csproj" />
   </Folder>
 </Solution>

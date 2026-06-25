@@ -4,7 +4,7 @@
 
 - Purpose: Configuration for the single RSS feed being ingested.
 - Fields:
-  - `FeedId` (string, required, immutable)
+  - `FeedId` (FeedId value type, required, immutable)
   - `Url` (string/URI, required)
   - `IsEnabled` (bool, required)
   - `LastSuccessfulIngestionAt` (datetimeoffset, optional)
@@ -16,8 +16,8 @@
 
 - Purpose: Canonical representation of an item discovered from RSS.
 - Fields:
-  - `FeedId` (string, required)
-  - `ItemId` (string, required, stable identity)
+  - `FeedId` (FeedId value type, required)
+  - `ItemId` (FeedItemId value type, required, stable identity)
   - `PublishedAt` (datetimeoffset, required)
   - `Title` (string, required)
   - `Content` (string, optional)
@@ -29,8 +29,8 @@
 
 - Purpose: Persistent idempotency record proving a feed item has already been ingested.
 - Fields:
-  - `FeedId` (string, required)
-  - `ItemId` (string, required)
+  - `FeedId` (FeedId value type, required)
+  - `ItemId` (FeedItemId value type, required)
   - `Status` (enum: `Publishing`, `Published`, `Failed`, required)
   - `PublishAttemptedAt` (datetimeoffset, required)
   - `IngestedAt` (datetimeoffset, optional, required when `Status = Published`)
@@ -52,7 +52,7 @@
 - Purpose: Operational summary for one ingestion execution.
 - Fields:
   - `RunId` (string/UUID, required)
-  - `FeedId` (string, required)
+  - `FeedId` (FeedId value type, required)
   - `StartedAt` (datetimeoffset, required)
   - `CompletedAt` (datetimeoffset, required)
   - `DiscoveredCount` (int >= 0)

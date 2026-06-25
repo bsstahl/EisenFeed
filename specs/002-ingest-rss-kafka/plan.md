@@ -64,16 +64,15 @@ specs/002-ingest-rss-kafka/
 ```text
 src/
 ├── EisenFeed.Core/
-│   ├── FeedIngestion/
-│   ├── DataPersistence/
+│   ├── Contracts/
 │   └── Models/
 ├── EisenFeed.Ingestion.Consume.Rss/
-│   ├── IReadRssFeeds.cs
+│   ├── IRetrieveFeedItems.cs
 │   └── FeedRepository.cs
-├── EisenFeed.Ingestion.Transform.Parser/
-│   ├── IFeedParserStrategy.cs
-│   ├── RssXmlParserStrategy.cs
-│   └── FeedParserStrategySelector.cs
+├── EisenFeed.Ingestion.Transform.Rules/
+│   ├── ITransformFeedItems.cs
+│   ├── FeedItemTransformer.cs
+│   └── FeedTransformStrategySelector.cs
 ├── EisenFeed.Ingestion.Produce.Kafka/
 │   ├── IWriteFeedItems.cs
 │   ├── FeedRepository.cs
@@ -88,20 +87,20 @@ src/
 
 tst/
 ├── EisenFeed.Core.Tests/
-└── EisenFeed.Ingestion.Tests/
- ├── Consume/
- ├── Transform/
- ├── Produce/
- ├── Orchestration/
- └── Integration/
+├── EisenFeed.Ingestion.Consume.Rss.Tests/
+├── EisenFeed.Ingestion.Transform.Rules.Tests/
+└── EisenFeed.Ingestion.Produce.Kafka.Tests/
 ```
 
 **Structure Decision**: Implement CTP as four separate libraries (`Consume.Rss`, `Transform.Parser`,
 `Produce.Kafka`, `Orchestration`) and host them in a single Aspire service project (`EisenFeed.Ingestion.Service`).
 Place all tests under `tst/` with per-library suites and integration coverage.
 
-Pattern Decision: Use repository abstractions for fetch and produce boundaries and strategy abstractions
-for parse/itemize behavior so each stage is independently testable and replaceable.
+Pattern Decision: Use repository abstractions for retrieve and produce boundaries and strategy abstractions
+for canonical-to-canonical transform behavior so each stage is independently testable and replaceable.
+
+Responsibility Decision: Transform components mutate or enrich canonical data; Orchestration components
+control stage ordering, idempotency checks, retries, and run-level accounting.
 
 ## Phase 0: Research Output
 

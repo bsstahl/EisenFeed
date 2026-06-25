@@ -75,15 +75,17 @@ As a reader, I can view ingestion results for each run so that I can confirm how
 - **FR-011**: The system MUST include deterministic message keys and stable item identities so downstream consumers can perform idempotent processing.
 - **FR-009**: The system MUST produce a run outcome summary containing counts of discovered, ingested, skipped, and failed items.
 - **FR-010**: The system MUST continue processing remaining items when a single item fails, unless a terminal feed-level failure prevents further processing.
-- **FR-012**: The ingestion pipeline MUST separate the following steps with explicit interfaces: fetch feed content, parse/itemize feed content, and produce feed items to Kafka.
-- **FR-013**: The parse/itemize step MUST accept raw feed payload (for example XML text/stream) and return canonical `FeedItem` instances independent of network fetch logic.
+- **FR-012**: The ingestion pipeline MUST separate the following steps with explicit interfaces: retrieve source feed items, transform canonical feed items, and produce feed items to Kafka.
+- **FR-013**: The retrieve step MUST translate source-native feed formats into canonical `FeedItem` instances independent of downstream transformation and publication logic.
 - **FR-014**: The produce step MUST accept canonical `FeedItem` instances and publish them to Kafka independent of parsing concerns.
-- **FR-015**: The system MUST provide unit tests for parse/itemize behavior using synthetic XML documents and unit/integration tests for produce behavior using canonical `FeedItem` inputs.
+- **FR-015**: The system MUST provide unit tests for retrieval behavior and canonicalization using representative source payloads, and unit/integration tests for produce behavior using canonical `FeedItem` inputs.
 - **FR-016**: The fetch step MUST be implemented behind a repository abstraction so feed retrieval can be tested and replaced independently.
-- **FR-017**: The parse/itemize step MUST use a strategy pattern so parser behavior can vary by feed format/profile without changing orchestration code.
+- **FR-017**: The transform step MUST use a strategy pattern or equivalent abstraction so canonical item transformation behavior can vary without changing orchestration code.
 - **FR-018**: The produce step MUST be implemented behind a repository abstraction so Kafka publishing behavior can be tested and replaced independently.
 - **FR-019**: The implementation MUST be split into four C# libraries: consume (RSS), transform (parser/itemizer), produce (Kafka repository), and orchestration.
 - **FR-020**: A single Aspire-hosted service MUST compose these four libraries into one executable ingestion pipeline for this feature increment.
+- **FR-021**: The transform step MUST be responsible for canonical-to-canonical data shaping only and MUST NOT own workflow sequencing, retry control, idempotency decisions, or run-summary accounting.
+- **FR-022**: The orchestration step MUST be responsible for workflow sequencing, idempotency checks, stop/continue behavior, retry control, and run-summary accounting, and MUST NOT own canonical item shaping rules.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -94,10 +96,10 @@ As a reader, I can view ingestion results for each run so that I can confirm how
 
 ### Architecture Components
 
-- **Consume Library**: Fetches raw RSS payload through repository abstraction.
-- **Transform Library**: Parses/itemizes raw payload into canonical `FeedItem` records via strategy pattern.
+- **Consume Library**: Retrieves and canonicalizes source feed items through repository abstraction.
+- **Transform Library**: Applies canonical-to-canonical transformation policies to retrieved `FeedItem` records via strategy abstraction.
 - **Produce Library**: Publishes canonical `FeedItem` messages to Kafka through repository abstraction.
-- **Orchestration Library**: Coordinates consume -> transform -> produce flow, idempotency checks, and run-summary accounting.
+- **Orchestration Library**: Coordinates consume -> transform -> produce flow, idempotency checks, retry and stop/continue control, and run-summary accounting.
 - **Aspire Node**: Single host node that runs the orchestration pipeline and wires dependencies.
 
 ## Success Criteria *(mandatory)*
@@ -120,8 +122,8 @@ As a reader, I can view ingestion results for each run so that I can confirm how
 
 ## Testing Strategy
 
-- **Fetch step tests**: Validate retrieval behavior, error handling, and timeout/retry logic independently from parsing.
-- **Parse/itemize tests**: Provide synthetic RSS XML payloads directly to the parser and verify canonical itemization, identity derivation prerequisites, and malformed-entry handling.
+- **Retrieve step tests**: Validate retrieval behavior, source-to-canonical mapping, error handling, and timeout/retry logic independently from downstream transformation.
+- **Transform tests**: Provide canonical `FeedItem` instances directly to transform logic and verify canonical-to-canonical processing, identity refinement, enrichment, and malformed-item handling policies.
 - **Produce tests**: Provide canonical `FeedItem` instances directly to producer logic and validate key generation, payload mapping, and Kafka publish invocation/ack handling.
 - **Cross-step integration tests**: Validate end-to-end behavior and run summary counts while preserving at-least-once semantics.
-- **Pattern conformance tests**: Verify fetch and produce repositories are consumed via interfaces, and parser strategies are selected through strategy abstraction rather than conditional branching in orchestration.
+- **Pattern conformance tests**: Verify retrieve and produce repositories are consumed via interfaces, and transform strategies are selected through abstraction rather than conditional branching in orchestration.

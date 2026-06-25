@@ -6,6 +6,23 @@
 
 ## Naming & Variable Conventions
 
+### Interface Naming
+
+All domain contract interfaces MUST:
+
+- Start with `I`
+- Use a generic responsibility-oriented **verb phrase** name
+- Avoid implementation details (technology, mechanism, or hosting model)
+
+Examples:
+
+```csharp
+IAgeFeedItems
+IPerformFeedIngestion
+IRetrieveFeedItems
+IWriteFeedItems
+```
+
 ### Test Class Naming
 
 Test classes **MUST** follow this pattern:
@@ -15,8 +32,8 @@ Test classes **MUST** follow this pattern:
 Examples:
 
 ```csharp
-public sealed class FeedRepository_FetchAsync_Should
-public sealed class FeedParserStrategySelector_Select_Should
+public sealed class FeedRepository_RetrieveAsync_Should
+public sealed class FeedTransformStrategySelector_Select_Should
 public sealed class FeedRepository_PublishAsync_Should
 ```
 
@@ -35,8 +52,8 @@ Test file names **MUST** match the test class name exactly:
 Examples:
 
 ```csharp
-FeedRepository_FetchAsync_Should.cs
-FeedParserStrategySelector_Select_Should.cs
+FeedRepository_RetrieveAsync_Should.cs
+FeedTransformStrategySelector_Select_Should.cs
 FeedRepository_PublishAsync_Should.cs
 ```
 
@@ -46,13 +63,13 @@ The class or component being tested **MUST** always use the variable name `targe
 
 ```csharp
 [Fact]
-public async Task FetchAsync_WhenFeedIsReachable_ReturnsRawRssPayload()
+public async Task RetrieveAsync_WhenFeedIsReachable_ReturnsCanonicalFeedItems()
 {
     var target = CreateTestTarget();
 
-    string payload = await target.FetchAsync(new Uri("https://example.com/feed.xml"), CancellationToken.None);
+    var items = await target.RetrieveAsync(CancellationToken.None);
 
-    Assert.False(string.IsNullOrWhiteSpace(payload));
+    Assert.NotEmpty(items);
 }
 ```
 
@@ -68,8 +85,9 @@ public async Task FetchAsync_WhenFeedIsReachable_ReturnsRawRssPayload()
 Use `CreateTestTarget()` as the factory method name for creating instances of the class under test.
 
 ```csharp
-private static IReadRssFeeds CreateTestTarget()
+private static IRetrieveFeedItems CreateTestTarget()
 {
+    var feedUrl = new Uri("https://example.com/feed.xml");
     var handler = new DelegateHttpMessageHandler((_, _) =>
         Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
         {
@@ -77,7 +95,7 @@ private static IReadRssFeeds CreateTestTarget()
         }));
 
     var httpClient = new HttpClient(handler);
-    return new FeedRepository(httpClient);
+    return new FeedRepository(httpClient, feedUrl);
 }
 ```
 
@@ -92,12 +110,12 @@ private static IReadRssFeeds CreateTestTarget()
 Use domain-specific names for dependencies and test fixtures:
 
 ```csharp
-private static IFeedItemStore CreateMockItemStore()
+private static IWriteFeedItems CreateMockItemStore()
 {
     // Return mock or test double
 }
 
-private static FeedSource CreateTestFeed(string feedId = "test-feed")
+private static object CreateTestFeedConfiguration(string feedId = "test-feed")
 {
     // Return fixture
 }
@@ -113,7 +131,7 @@ Because the test class already encodes `[TestTargetClassName]_[TestMethodName]_S
 MUST be behavior-only descriptions with no repeated method prefix.
 
 ```csharp
-public async Task ReturnTheRawRssPayloadWhenTheFeedIsReachable()
+public async Task ReturnCanonicalFeedItemsWhenTheFeedIsReachable()
 public async Task ThrowOperationCanceledExceptionWhenCancellationIsRequested()
 ```
 
@@ -123,18 +141,16 @@ public async Task ThrowOperationCanceledExceptionWhenCancellationIsRequested()
 
 ```csharp
 [Fact]
-public async Task ReturnTheRawRssPayloadWhenTheFeedIsReachable()
+public async Task ReturnCanonicalFeedItemsWhenTheFeedIsReachable()
 {
     // Arrange: Setup target and dependencies
     var target = CreateTestTarget();
-    var feedUrl = new Uri("https://example.com/feed.xml");
 
     // Act: Execute the method under test
-    string payload = await target.FetchAsync(feedUrl, CancellationToken.None);
+    var items = await target.RetrieveAsync(CancellationToken.None);
 
     // Assert: Verify expected outcome
-    Assert.False(string.IsNullOrWhiteSpace(payload));
-    Assert.Contains("<rss", payload, StringComparison.OrdinalIgnoreCase);
+    Assert.NotEmpty(items);
 }
 ```
 
@@ -152,25 +168,23 @@ Example:
 ```csharp
 private readonly ITestOutputHelper _output;
 
-public FeedRepository_FetchAsync_Should(ITestOutputHelper output)
+public FeedRepository_RetrieveAsync_Should(ITestOutputHelper output)
 {
     _output = output;
 }
 
 [Fact]
-public async Task ReturnTheRawRssPayloadWhenTheFeedIsReachable()
+public async Task ReturnCanonicalFeedItemsWhenTheFeedIsReachable()
 {
     try
     {
         var target = CreateTestTarget();
-        var feedUrl = new Uri("https://example.com/feed.xml");
+        _output.WriteLine("Input feedUrl configured in constructor");
 
-        _output.WriteLine("Input feedUrl: {0}", feedUrl);
+        var items = await target.RetrieveAsync(CancellationToken.None);
 
-        string payload = await target.FetchAsync(feedUrl, CancellationToken.None);
-
-        _output.WriteLine("Output payload length: {0}", payload?.Length ?? 0);
-        Assert.False(string.IsNullOrWhiteSpace(payload));
+        _output.WriteLine("Output item count: {0}", items.Count);
+        Assert.NotEmpty(items);
     }
     catch (Exception ex)
     {
@@ -275,6 +289,22 @@ var item = CanonicalFeedItemFactory.Create(
 
 ---
 
+## Code Coverage Policy
+
+- Test libraries MUST be excluded from code coverage reports.
+- Coverage is intended to measure production code under `src/`, not test code under `tst/`.
+- Every test library MUST declare the assembly-level exclusion attribute in source:
+
+```csharp
+using System.Diagnostics.CodeAnalysis;
+
+[assembly: ExcludeFromCodeCoverage]
+```
+
+- New test libraries MUST include this declaration when created.
+
+---
+
 ## Test Class Organization
 
 - One test class per target method under a target class
@@ -284,10 +314,10 @@ var item = CanonicalFeedItemFactory.Create(
 - Add constructor-specific tests only when the constructor itself contains meaningful behavior such as guard clauses, validation, or composition rules.
 
 ```csharp
-public sealed class FeedRepository_FetchAsync_Should
+public sealed class FeedRepository_RetrieveAsync_Should
 {
     [Fact]
-    public async Task ReturnTheRawRssPayloadWhenTheFeedIsReachable() { ... }
+    public async Task ReturnCanonicalFeedItemsWhenTheFeedIsReachable() { ... }
 
     [Fact]
     public async Task ThrowHttpRequestExceptionWhenTheFeedIsUnavailable() { ... }
@@ -311,7 +341,7 @@ public async Task ThrowOperationCanceledExceptionWhenCancellationIsRequested()
     cts.Cancel();
 
     await Assert.ThrowsAnyAsync<OperationCanceledException>(
-        () => target.FetchAsync(new Uri("https://example.com/feed.xml"), cts.Token));
+        () => target.RetrieveAsync(cts.Token));
 }
 ```
 
@@ -341,10 +371,11 @@ Rules:
 Example:
 
 ```csharp
-private static IReadRssFeeds CreateTestTarget(HttpMessageHandler handler)
+private static IRetrieveFeedItems CreateTestTarget(HttpMessageHandler handler)
 {
+    var feedUrl = new Uri("https://example.com/feed.xml");
     var httpClient = new HttpClient(handler);
-    return new FeedRepository(httpClient);
+    return new FeedRepository(httpClient, feedUrl);
 }
 
 private sealed class DelegateHttpMessageHandler : HttpMessageHandler

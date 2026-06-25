@@ -1,3 +1,4 @@
+using EisenFeed.Core.Contracts;
 using EisenFeed.Core.Models;
 
 namespace EisenFeed.Ingestion.Produce.Kafka;
@@ -13,7 +14,7 @@ public sealed class FeedRepository : IWriteFeedItems
         _messageMapper = messageMapper ?? throw new ArgumentNullException(nameof(messageMapper));
     }
 
-    public async Task<ProduceDeliveryResult> PublishAsync(IEnumerable<FeedItem> items, CancellationToken cancellationToken = default)
+    public async Task<DeliveryResult> PublishAsync(IEnumerable<FeedItem> items, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(items);
         cancellationToken.ThrowIfCancellationRequested();
@@ -44,6 +45,6 @@ public sealed class FeedRepository : IWriteFeedItems
             }
         }
 
-        return new ProduceDeliveryResult(attemptedCount, deliveredCount, failedCount);
+        return new DeliveryResult(attemptedCount, deliveredCount, failedCount);
     }
 }

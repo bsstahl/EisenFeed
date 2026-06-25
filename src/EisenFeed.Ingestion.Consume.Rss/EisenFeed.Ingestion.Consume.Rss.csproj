@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EisenFeed.Core\EisenFeed.Core.csproj" />
+  </ItemGroup>
+
 </Project>
