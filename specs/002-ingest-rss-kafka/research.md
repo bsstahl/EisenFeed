@@ -27,7 +27,7 @@
 ## Decision 4: Partial Failure and Retry Semantics
 
 - Decision: Continue processing when an individual item fails and report per-run counters (`discovered`, `ingested`, `skipped`, `failed`); retries reprocess only items without ingested records.
-- Rationale: Matches FR-009 and FR-010 while preserving throughput and operator visibility.
+- Rationale: Matches FR-009 and FR-010 while preserving throughput and operational visibility.
 - Alternatives considered:
   - Fail-fast on first item error: rejected because one malformed item should not block valid items.
   - Best-effort logging without counters: rejected because it weakens observability and acceptance testability.

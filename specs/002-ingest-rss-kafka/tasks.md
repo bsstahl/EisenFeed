@@ -32,13 +32,13 @@
 
 **Independent Test**: Tests fail initially and encode expected behavior for fetch repository abstraction, parser strategy over synthetic XML, and producer repository behavior with canonical `FeedItem` inputs.
 
-- [x] T006 [P] [US1] Create fetch repository unit tests for successful RSS retrieval in tst/EisenFeed.Ingestion.Tests/Consume/RssFeedFetchRepositoryTests.cs
-- [x] T007 [P] [US1] Create fetch repository unit tests for feed-level failures/timeouts in tst/EisenFeed.Ingestion.Tests/Consume/RssFeedFetchRepositoryFailureTests.cs
+- [x] T006 [P] [US1] Create fetch repository unit tests for successful RSS retrieval in tst/EisenFeed.Ingestion.Tests/Consume/FeedRepositoryTests.cs
+- [x] T007 [P] [US1] Create fetch repository unit tests for feed-level failures/timeouts in tst/EisenFeed.Ingestion.Tests/Consume/FeedRepositoryFailureTests.cs
 - [x] T008 [P] [US1] Create parser strategy unit tests using synthetic XML for valid itemization in tst/EisenFeed.Ingestion.Tests/Transform/RssXmlParserStrategyTests.cs
 - [x] T009 [P] [US1] Create parser strategy unit tests using synthetic XML for malformed item handling in tst/EisenFeed.Ingestion.Tests/Transform/RssXmlParserStrategyMalformedXmlTests.cs
 - [x] T010 [P] [US1] Create parser strategy selector tests for strategy pattern dispatch in tst/EisenFeed.Ingestion.Tests/Transform/FeedParserStrategySelectorTests.cs
-- [x] T011 [P] [US1] Create producer repository unit tests with canonical FeedItems for key/payload mapping in tst/EisenFeed.Ingestion.Tests/Produce/KafkaFeedProduceRepositoryMappingTests.cs
-- [x] T012 [P] [US1] Create producer repository unit tests with canonical FeedItems for ack/error handling in tst/EisenFeed.Ingestion.Tests/Produce/KafkaFeedProduceRepositoryDeliveryTests.cs
+- [x] T011 [P] [US1] Create message mapper unit tests with canonical FeedItems for key/payload mapping in tst/EisenFeed.Ingestion.Tests/Produce/FeedIdItemIdMessageMapperTests.cs
+- [x] T012 [P] [US1] Create producer repository unit tests with canonical FeedItems for ack/error handling in tst/EisenFeed.Ingestion.Tests/Produce/FeedRepositoryDeliveryTests.cs
 - [x] T013 [US1] Add initial red-test execution notes for US1 in specs/002-ingest-rss-kafka/checklists/requirements.md
 
 ---
@@ -99,13 +99,13 @@
 
 **Independent Test**: All US1 tests in Phase 2 pass.
 
-- [ ] T030 [P] [US1] Implement fetch repository abstraction and RSS implementation in src/EisenFeed.Ingestion.Consume.Rss/IFeedFetchRepository.cs
-- [ ] T031 [P] [US1] Implement RSS fetch repository behavior in src/EisenFeed.Ingestion.Consume.Rss/RssFeedFetchRepository.cs
+- [ ] T030 [P] [US1] Implement fetch repository abstraction and RSS implementation in src/EisenFeed.Ingestion.Consume.Rss/IReadRssFeeds.cs
+- [ ] T031 [P] [US1] Implement RSS fetch repository behavior in src/EisenFeed.Ingestion.Consume.Rss/FeedRepository.cs
 - [ ] T032 [P] [US1] Implement parser strategy interface and selector in src/EisenFeed.Ingestion.Transform.Parser/IFeedParserStrategy.cs
 - [ ] T033 [P] [US1] Implement parser strategy selector in src/EisenFeed.Ingestion.Transform.Parser/FeedParserStrategySelector.cs
 - [ ] T034 [P] [US1] Implement synthetic-XML-compatible parser strategy in src/EisenFeed.Ingestion.Transform.Parser/RssXmlParserStrategy.cs
-- [ ] T035 [P] [US1] Implement producer repository abstraction and Kafka implementation in src/EisenFeed.Ingestion.Produce.Kafka/IFeedProduceRepository.cs
-- [ ] T036 [P] [US1] Implement Kafka producer repository mapping/delivery logic in src/EisenFeed.Ingestion.Produce.Kafka/KafkaFeedProduceRepository.cs
+- [ ] T035 [P] [US1] Implement producer repository abstraction and Kafka implementation in src/EisenFeed.Ingestion.Produce.Kafka/IWriteFeedItems.cs
+- [ ] T036 [P] [US1] Implement Kafka producer repository mapping/delivery logic in src/EisenFeed.Ingestion.Produce.Kafka/FeedRepository.cs
 - [ ] T037 [US1] Run US1 tests and capture green results in specs/002-ingest-rss-kafka/checklists/requirements.md
 
 ---
@@ -117,7 +117,7 @@
 **Independent Test**: All US2 tests in Phase 3 pass.
 
 - [ ] T038 [P] [US2] Implement ingestion orchestration flow in src/EisenFeed.Ingestion.Orchestration/IngestionOrchestrator.cs
-- [ ] T039 [P] [US2] Implement persistent ingested-item store adapter usage in src/EisenFeed.Ingestion.Orchestration/IngestionOrchestrator.cs
+- [ ] T039 [P] [US2] Implement persistent Feed Item Ingestion store adapter usage in src/EisenFeed.Ingestion.Orchestration/IngestionOrchestrator.cs
 - [ ] T040 [P] [US2] Implement retry-aware at-least-once produce orchestration in src/EisenFeed.Ingestion.Orchestration/IngestionOrchestrator.cs
 - [ ] T041 [US2] Integrate orchestration with host startup wiring in src/EisenFeed.Ingestion.Service/Program.cs
 - [ ] T042 [US2] Run US2 tests and capture green results in specs/002-ingest-rss-kafka/checklists/requirements.md

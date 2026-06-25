@@ -253,10 +253,10 @@ The terminal state of an Ingestion Run:
 
 ## Architectural Patterns
 
-### Fetch Repository / IFeedFetchRepository
+### Fetch Repository / IReadRssFeeds
 
 The repository abstraction over the Fetch Stage. Decouples HTTP/network concerns from orchestration
-and parsing. Concrete implementation: `RssFeedFetchRepository`.
+and parsing. Concrete implementation: `FeedRepository` in `EisenFeed.Ingestion.Consume.Rss`.
 
 ### Parser Strategy / IFeedParserStrategy
 
@@ -268,10 +268,10 @@ FeedId and returns Canonical Feed Items. Concrete implementation: `RssXmlParserS
 The component that selects the appropriate Parser Strategy for a given content type. Throws
 `NotSupportedException` for unknown content types.
 
-### Produce Repository / IFeedProduceRepository
+### Produce Repository / IWriteFeedItems
 
 The repository abstraction over the Produce Stage. Decouples Kafka client concerns from
-orchestration logic. Concrete implementation: `KafkaFeedProduceRepository`.
+orchestration logic. Concrete implementation: `FeedRepository` in `EisenFeed.Ingestion.Produce.Kafka`.
 
 ---
 
@@ -308,8 +308,8 @@ The library implementing the Parse Step (the Transform stage of the CTP pipeline
 
 ### EisenFeed.Ingestion.Produce.Kafka
 
-The library implementing the Produce Stage. Contains `IFeedProduceRepository`,
-`KafkaFeedProduceRepository`, and `ProduceDeliveryResult`. Depends on `EisenFeed.Core`.
+The library implementing the Produce Stage. Contains `IWriteFeedItems`,
+`FeedRepository`, `FeedIdItemIdMessageMapper`, and `ProduceDeliveryResult`. Depends on `EisenFeed.Core`.
 
 ### EisenFeed.Ingestion.Orchestration
 
@@ -336,7 +336,7 @@ being locked:
 | Term in use | Where used | Question |
 |---|---|---|
 | `parse/itemize` | spec FRs, research | ✅ **Resolved**: The step is called **Parse**. It is the Transform stage of CTP. The action is parsing the raw feed into individual FeedItem entities, each carrying feed-level and item-level data. |
-| `FetchAsync` | `IReadRssFeeds`, `FeedRepository` | ✅ **Resolved**: Use `FetchAsync` as the canonical method name for feed retrieval. |
+| `FetchAsync` | `IReadRssFeeds` | ✅ **Resolved**: Use `FetchAsync` as the canonical method name for feed retrieval via `IReadRssFeeds`. |
 | `MapMessagesAsync` | `FeedIdItemIdMessageMapper` | ✅ **Resolved**: The mapper returns correlated key/payload pairs (`FeedKafkaMessage`) to avoid positional mismatch across separate collections. |
 | `ProduceAsyncWithForcedFailure` | test + stub | ✅ **Resolved**: This is test-only and must never exist in production repositories. Failure-path testing should use test doubles in the test project. |
 | `IngestedItemRecord` | data model | ✅ **Resolved**: Canonical name is `FeedItemIngestion`. |

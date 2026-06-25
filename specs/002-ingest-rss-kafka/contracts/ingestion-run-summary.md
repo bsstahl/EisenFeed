@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Defines the run-level output contract used by operators and tests to validate ingestion outcomes.
+Defines the run-level output contract used by readers and tests to validate ingestion outcomes.
 
 ## Shape
 

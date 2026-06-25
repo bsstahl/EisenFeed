@@ -20,8 +20,8 @@ As a reader, I can run ingestion for one configured RSS feed so that newly publi
 
 **Acceptance Scenarios**:
 
-1. **Given** a configured RSS feed and an empty ingested-item collection, **When** ingestion runs, **Then** all currently available feed items are stored as ingested and published to the target Kafka topic for later processing.
-2. **Given** a configured RSS feed where some items are already recorded as ingested, **When** ingestion runs again, **Then** only newly discovered items are stored and published, and already-ingested items are skipped.
+1. **Given** a configured RSS feed and an empty Idempotency Store, **When** ingestion runs, **Then** all currently available feed items are stored as Feed Item Ingestions and published to the target Kafka topic for later processing.
+2. **Given** a configured RSS feed where some items are already recorded in the Idempotency Store, **When** ingestion runs again, **Then** only newly discovered items are stored as Feed Item Ingestions and published, and already-ingested items are skipped.
 
 ---
 
@@ -70,7 +70,7 @@ As a reader, I can view ingestion results for each run so that I can confirm how
 - **FR-004**: The system MUST maintain a persistent collection of ingested item identities so prior ingestions are recognized across runs.
 - **FR-005**: The system MUST provide at-least-once delivery for newly discovered feed items.
 - **FR-006**: The system MUST publish each newly ingested item to the configured Kafka topic for later downstream processing.
-- **FR-007**: The system MUST skip publishing and re-collecting items already present in the ingested-item collection.
+- **FR-007**: The system MUST skip publishing and re-collecting items already present in the Idempotency Store.
 - **FR-008**: The system MUST allow ingestion to be safely re-run after partial completion or failure, acknowledging that duplicate topic messages may occur under at-least-once delivery.
 - **FR-011**: The system MUST include deterministic message keys and stable item identities so downstream consumers can perform idempotent processing.
 - **FR-009**: The system MUST produce a run outcome summary containing counts of discovered, ingested, skipped, and failed items.
@@ -89,7 +89,7 @@ As a reader, I can view ingestion results for each run so that I can confirm how
 
 - **Feed Source**: Represents the single RSS feed configuration used by ingestion, including location and ingestion enablement state.
 - **Feed Item**: Represents one item discovered in the RSS feed, including a stable identity and content metadata needed for downstream processing.
-- **Feed Item Ingestion**: Represents a persisted record proving a feed item identity has already been ingested, used for idempotency checks.
+- **Feed Item Ingestion** / `FeedItemIngestion`: Represents a persisted record in the Idempotency Store proving a feed item identity has already been ingested, used for idempotency checks.
 - **Feed Ingestion**: Represents per-run operational outcomes, including discovered, ingested, skipped, and failed counts plus run status.
 
 ### Architecture Components

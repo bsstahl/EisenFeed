@@ -68,15 +68,17 @@ src/
 │   ├── DataPersistence/
 │   └── Models/
 ├── EisenFeed.Ingestion.Consume.Rss/
-│   ├── IFeedFetchRepository.cs
-│   └── RssFeedFetchRepository.cs
+│   ├── IReadRssFeeds.cs
+│   └── FeedRepository.cs
 ├── EisenFeed.Ingestion.Transform.Parser/
 │   ├── IFeedParserStrategy.cs
 │   ├── RssXmlParserStrategy.cs
 │   └── FeedParserStrategySelector.cs
 ├── EisenFeed.Ingestion.Produce.Kafka/
-│   ├── IFeedProduceRepository.cs
-│   └── KafkaFeedProduceRepository.cs
+│   ├── IWriteFeedItems.cs
+│   ├── FeedRepository.cs
+│   ├── FeedIdItemIdMessageMapper.cs
+│   └── FeedKafkaMessage.cs
 ├── EisenFeed.Ingestion.Orchestration/
 │   ├── IngestionOrchestrator.cs
 │   └── RunSummaryBuilder.cs
