@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\EisenFeed.AppHost\EisenFeed.AppHost.csproj" />
     <ProjectReference Include="..\..\src\EisenFeed.Core\EisenFeed.Core.csproj" />
+    <ProjectReference Include="..\..\src\EisenFeed.Ingestion.Service\EisenFeed.Ingestion.Service.csproj" />
   </ItemGroup>
 
 </Project>

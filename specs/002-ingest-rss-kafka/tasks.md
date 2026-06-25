@@ -93,7 +93,7 @@
 - [x] T017 [P] [US2] Create re-run delivery tests for duplicate-minimization via idempotency store in tst/EisenFeed.Ingestion.Orchestration.Tests/IngestionOrchestrator_RunOnceAsync_Should.cs
 - [x] T050 [P] [US2] Create integration test project scaffold in tst/EisenFeed.Ingestion.Service.Tests/EisenFeed.Ingestion.Service.Tests.csproj with reference to EisenFeed.AppHost
 - [x] T051 [P] [US2] Create Aspire integration test for full pipeline run: items retrieved from RSS stub, published to Kafka, skipped on re-run in tst/EisenFeed.Ingestion.Service.Tests/IngestionPipeline_RunOnceAsync_Should.cs
-- [ ] T018 [US2] **GATE**: Confirm all US2 unit and integration tests fail (RED) before proceeding to Phase 7 — record results in specs/002-ingest-rss-kafka/checklists/requirements.md
+- [x] T018 [US2] **GATE**: Confirm all US2 unit and integration tests fail (RED) before proceeding to Phase 7 — record results in specs/002-ingest-rss-kafka/checklists/requirements.md
 
 ---
 
@@ -103,13 +103,13 @@
 
 **Independent Test**: All US2 unit tests in Phase 6 pass and Aspire integration tests execute end-to-end.
 
-- [ ] T028 Create ingestion host service project in src/EisenFeed.Ingestion.Service/EisenFeed.Ingestion.Service.csproj
-- [ ] T029 Wire ingestion service project references and solution entries in EisenFeed.slnx
-- [ ] T038 [P] [US2] Implement ingestion orchestration flow in src/EisenFeed.Ingestion.Orchestration/IngestionOrchestrator.cs
-- [ ] T039 [P] [US2] Implement persistent Feed Item Ingestion store adapter usage in src/EisenFeed.Ingestion.Orchestration/IngestionOrchestrator.cs
-- [ ] T040 [P] [US2] Implement retry-aware at-least-once produce orchestration in src/EisenFeed.Ingestion.Orchestration/IngestionOrchestrator.cs
-- [ ] T041 [US2] Integrate orchestration with host startup wiring in src/EisenFeed.Ingestion.Service/Program.cs
-- [ ] T042 [US2] **GATE**: Confirm all US2 unit and integration tests pass (GREEN) before proceeding to Phase 8 — record results in specs/002-ingest-rss-kafka/checklists/requirements.md
+- [x] T028 Create ingestion host service project in src/EisenFeed.Ingestion.Service/EisenFeed.Ingestion.Service.csproj
+- [x] T029 Wire ingestion service project references and solution entries in EisenFeed.slnx
+- [x] T038 [P] [US2] Implement ingestion orchestration flow in src/EisenFeed.Ingestion.Orchestration/IngestionOrchestrator.cs
+- [x] T039 [P] [US2] Implement persistent Feed Item Ingestion store adapter usage in src/EisenFeed.Ingestion.Orchestration/IngestionOrchestrator.cs
+- [x] T040 [P] [US2] Implement retry-aware at-least-once produce orchestration in src/EisenFeed.Ingestion.Orchestration/IngestionOrchestrator.cs
+- [x] T041 [US2] Integrate orchestration with host startup wiring in src/EisenFeed.Ingestion.Service/Program.cs
+- [x] T042 [US2] **GATE**: Confirm all US2 unit and integration tests pass (GREEN) before proceeding to Phase 8 — record results in specs/002-ingest-rss-kafka/checklists/requirements.md
 
 ---
 
