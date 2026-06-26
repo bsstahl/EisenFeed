@@ -3,22 +3,26 @@
 ## Core Principles
 
 ### I. Priority-Driven Evaluation (NON-NEGOTIABLE)
+
 EisenFeed MUST evaluate every feed item using the Eisenhower Matrix (Urgent vs. Important).
 All scoring logic MUST be transparent, testable, and explainable. Every item's quadrant position
 MUST be derivable from explicit urgency and importance values. Opaque scoring is forbidden.
 
 ### II. Dynamic Content Aging
+
 Scores decay over time according to explicit aging rules. Urgency decays quickly unless reinforced;
 importance decays slowly or not at all for evergreen/VIP sources. Aging MUST be deterministic and
 configurable per feed modifier. Temporal changes in quadrant position MUST be predictable and
 observable through audit trails.
 
 ### III. Composable Feed Modifiers
+
 Feed characteristics (owned, VIP, emergency, entertainment) MUST influence scoring via composable,
 independently testable modifiers. Modifiers MUST NOT hardcode business logic; they MUST only adjust
 coefficients. Adding a new modifier MUST NOT require changes to core scoring logic.
 
 ### IV. Integration-Ready Architecture
+
 The core domain/library MUST remain framework-agnostic. Infrastructure dependencies MUST be
 isolated behind interfaces and adapters, with dependencies flowing toward core abstractions.
 Every subsystem (ingestion, scoring, aging, persistence, execution/output) MUST expose a clear,
@@ -27,6 +31,7 @@ Feed items MUST serialize/deserialize losslessly. Storage backends (SQL, cache, 
 swappable.
 
 ### V. Testable Scoring (MANDATORY)
+
 Scoring changes MUST be accompanied by test cases that document expected behavior before
 implementation. Scoring disputes MUST be resolved by reference to test coverage and audit trails.
 Deterministic business logic (including scoring, aging, and routing policy evaluation) MUST be
@@ -34,6 +39,7 @@ unit-testable without I/O. Non-deterministic scoring is forbidden. All numeric c
 urgency/importance MUST include rationale in code comments or documentation.
 
 ### VI. CTP Pipeline Architecture (MANDATORY)
+
 All operations MUST follow a consume-transform-produce (CTP) pattern. For feeds, consume from
 external sources and produce to Kafka. For internal processing, consume from Kafka and produce to
 Kafka. For external interfaces (for example EchoDrop), consume from Kafka and produce to the
@@ -72,6 +78,7 @@ MUST confirm that new features maintain composability, CTP boundaries, and testa
 changes MUST include regression test suites.
 
 Amendments follow semantic versioning:
+
 - **MAJOR**: Principle removal or redefinition (requires migration plan)
 - **MINOR**: New principle or expanded guidance
 - **PATCH**: Clarifications, wording, non-semantic refinements

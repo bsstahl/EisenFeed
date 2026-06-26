@@ -1,7 +1,7 @@
 # `aspire new` Templates
 
 Reference for choosing and invoking templates with `aspire new`. Source:
-https://aspire.dev/reference/cli/commands/aspire-new/
+<https://aspire.dev/reference/cli/commands/aspire-new/>
 
 ## Template List
 

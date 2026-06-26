@@ -1,8 +1,8 @@
 namespace EisenFeed.Core.Models;
 
 public sealed record FeedItem(
-    string FeedId,
-    string ItemId,
+    FeedId FeedId,
+    FeedItemId ItemId,
     DateTimeOffset PublishedAt,
     string Title,
     string Content);

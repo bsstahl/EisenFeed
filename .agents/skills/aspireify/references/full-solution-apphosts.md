@@ -111,7 +111,7 @@ var api = builder.AddProject<Projects.Api>("api")
     .WaitForCompletion(migrator);  // api waits for migrations to finish
 ```
 
-2. **Leave as manual** — the developer runs migrations separately before `aspire start`. Note this in an AppHost comment:
+1. **Leave as manual** — the developer runs migrations separately before `aspire start`. Note this in an AppHost comment:
 
 ```csharp
 // Run migrations manually: dotnet run --project ../util/Migrator
@@ -175,7 +175,7 @@ Steps:
 }
 ```
 
-4. Leave existing services targeting their current TFM unless the user explicitly asks to migrate them.
+1. Leave existing services targeting their current TFM unless the user explicitly asks to migrate them.
 
 ### Important solution caveat
 

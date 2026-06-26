@@ -24,7 +24,7 @@ metadata:
 
 | Requirement | Install |
 |-------------|---------|
-| .NET 10.0 SDK | https://dotnet.microsoft.com/download |
+| .NET 10.0 SDK | <https://dotnet.microsoft.com/download> |
 | Aspire CLI (curl/PowerShell) | `curl -sSL https://aspire.dev/install.sh \| bash` |
 | Aspire CLI (NativeAOT global tool, .NET 10) | `dotnet tool install -g Aspire.Cli` |
 

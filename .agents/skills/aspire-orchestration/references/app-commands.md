@@ -76,6 +76,7 @@ Read `aspire.config.json` at repo root for init context:
 | `appHost.path` | Path to AppHost file/dir | Where to edit |
 
 C# has two sub-modes:
+
 - **Single-file**: `appHost.path` → `apphost.cs` (uses `#:sdk` directive)
 - **Full project**: `appHost.path` → directory with `.csproj` + `Program.cs`
 

@@ -8,4 +8,8 @@
     <UserSecretsId>9b9f8d76-b7d4-45d2-85a3-d0dd597770f0</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EisenFeed.Ingestion.Service\EisenFeed.Ingestion.Service.csproj" />
+  </ItemGroup>
+
 </Project>

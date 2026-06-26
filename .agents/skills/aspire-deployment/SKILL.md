@@ -154,8 +154,9 @@ The Azure deployment path in this skill is `aspire add <azure-target>`, AppHost 
    - Use `--yes` only when the user or CI workflow already made teardown intent explicit.
    - Prefer `aspire destroy` over target-native delete commands unless you are troubleshooting failed teardown or cleaning up unmanaged leftovers.
 10. **Verify the outcome.**
-   - Use target output, `aspire describe`, cloud CLI, Docker Compose, kubectl, or endpoint checks appropriate to the target.
-   - After destroy, verify target resources are removed or record any leftovers that require manual cleanup.
+
+- Use target output, `aspire describe`, cloud CLI, Docker Compose, kubectl, or endpoint checks appropriate to the target.
+- After destroy, verify target resources are removed or record any leftovers that require manual cleanup.
 
 ## AppHost target detection
 
