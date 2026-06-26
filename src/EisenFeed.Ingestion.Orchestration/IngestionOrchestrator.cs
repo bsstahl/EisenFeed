@@ -94,8 +94,8 @@ public sealed class IngestionOrchestrator
                 LastError: itemStatus == FeedItemIngestionStatus.Failed ? "Publish failed" : null,
                 KafkaMessageKey: $"{item.FeedId}:{item.ItemId}",
                 KafkaTopic: itemStatus == FeedItemIngestionStatus.Publishing ? "feed-items" : null,
-                KafkaPartition: itemStatus == FeedItemIngestionStatus.Publishing ? 0 : null,
-                KafkaOffset: itemStatus == FeedItemIngestionStatus.Publishing ? 0 : null,
+                KafkaPartition: null,  // TODO: populate from producer delivery confirmation callback
+                KafkaOffset: null,  // TODO: populate from producer delivery confirmation callback
                 RunId: runId.ToString("D"));
 
             await _ingestionStore
