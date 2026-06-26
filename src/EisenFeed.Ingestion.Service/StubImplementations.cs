@@ -49,7 +49,7 @@ public sealed class StubWriteFeedItems : IWriteFeedItems
     /// <summary>Test override: if set, these item IDs will fail to publish (return in FailedCount).</summary>
     public static IReadOnlyCollection<FeedItemId>? TestFailItemIds { get; set; }
 
-    public Task<DeliveryResult> PublishAsync(IEnumerable<FeedItem> items, CancellationToken cancellationToken = default)
+    public Task<DeliveryResult> PublishAsync(IEnumerable<FeedItem> items, Guid runId, DateTimeOffset occurredAt, CancellationToken cancellationToken = default)
     {
         var list = items.ToList();
         

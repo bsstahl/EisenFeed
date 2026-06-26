@@ -8,6 +8,11 @@ public sealed class FeedTransformStrategySelector
 
     public ITransformFeedItems Select(string profile)
     {
+        if (string.IsNullOrWhiteSpace(profile))
+        {
+            throw new ArgumentException("Transform profile cannot be null, empty, or whitespace.", nameof(profile));
+        }
+
         if (string.Equals(profile, "default", StringComparison.OrdinalIgnoreCase))
         {
             return _defaultTransformer;

@@ -257,7 +257,7 @@ public sealed class IngestionOrchestrator_RunOnceAsync_Should
 
         public CapturingWriteFeedItems(List<FeedItem> captured) => _captured = captured;
 
-        public Task<DeliveryResult> PublishAsync(IEnumerable<FeedItem> items, CancellationToken cancellationToken = default)
+        public Task<DeliveryResult> PublishAsync(IEnumerable<FeedItem> items, Guid runId, DateTimeOffset occurredAt, CancellationToken cancellationToken = default)
         {
             var list = items.ToArray();
             _captured.AddRange(list);
@@ -276,7 +276,7 @@ public sealed class IngestionOrchestrator_RunOnceAsync_Should
             _failItemId = failItemId;
         }
 
-        public Task<DeliveryResult> PublishAsync(IEnumerable<FeedItem> items, CancellationToken cancellationToken = default)
+        public Task<DeliveryResult> PublishAsync(IEnumerable<FeedItem> items, Guid runId, DateTimeOffset occurredAt, CancellationToken cancellationToken = default)
         {
             var list = items.ToArray();
             if (list.Any(i => i.ItemId == _failItemId))
@@ -288,7 +288,7 @@ public sealed class IngestionOrchestrator_RunOnceAsync_Should
 
     private sealed class AlwaysFailingWriteFeedItems : IWriteFeedItems
     {
-        public Task<DeliveryResult> PublishAsync(IEnumerable<FeedItem> items, CancellationToken cancellationToken = default)
+        public Task<DeliveryResult> PublishAsync(IEnumerable<FeedItem> items, Guid runId, DateTimeOffset occurredAt, CancellationToken cancellationToken = default)
         {
             int count = items.Count();
             return Task.FromResult(new DeliveryResult(count, 0, count));

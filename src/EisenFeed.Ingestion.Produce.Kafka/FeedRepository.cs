@@ -14,13 +14,13 @@ public sealed class FeedRepository : IWriteFeedItems
         _messageMapper = messageMapper ?? throw new ArgumentNullException(nameof(messageMapper));
     }
 
-    public async Task<DeliveryResult> PublishAsync(IEnumerable<FeedItem> items, CancellationToken cancellationToken = default)
+    public async Task<DeliveryResult> PublishAsync(IEnumerable<FeedItem> items, Guid runId, DateTimeOffset occurredAt, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(items);
         cancellationToken.ThrowIfCancellationRequested();
 
         IReadOnlyCollection<FeedKafkaMessage> messages = await _messageMapper
-            .MapMessagesAsync(items, cancellationToken)
+            .MapMessagesAsync(items, runId, occurredAt, cancellationToken)
             .ConfigureAwait(false);
 
         int attemptedCount = 0;
@@ -39,10 +39,16 @@ public sealed class FeedRepository : IWriteFeedItems
 
                 deliveredCount++;
             }
-            catch (InvalidOperationException)
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+#pragma warning disable CA1031 // Intentionally catch all exceptions (except cancellation) to implement "continue on item failure" pattern
+            catch (Exception)
             {
                 failedCount++;
             }
+#pragma warning restore CA1031
         }
 
         return new DeliveryResult(attemptedCount, deliveredCount, failedCount);

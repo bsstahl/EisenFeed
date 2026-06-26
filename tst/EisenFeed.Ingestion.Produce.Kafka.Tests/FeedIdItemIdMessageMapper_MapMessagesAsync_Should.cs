@@ -23,6 +23,8 @@ public sealed class FeedIdItemIdMessageMapper_MapMessagesAsync_Should
         try
         {
             var target = CreateTestTarget();
+            var runId = Guid.NewGuid();
+            var occurredAt = DateTimeOffset.UtcNow;
             var item = CanonicalFeedItemFactory.Create(feedId: FeedId.From("feed-a"), itemId: FeedItemId.From("item-42"));
 
             _output.WriteLine(
@@ -32,8 +34,10 @@ public sealed class FeedIdItemIdMessageMapper_MapMessagesAsync_Should
                 item.PublishedAt,
                 item.Title,
                 item.Content?.Length ?? 0);
+            _output.WriteLine("Input runId: {0}", runId);
+            _output.WriteLine("Input occurredAt: {0:O}", occurredAt);
 
-            IReadOnlyCollection<FeedKafkaMessage> messages = await target.MapMessagesAsync(new[] { item }, CancellationToken.None);
+            IReadOnlyCollection<FeedKafkaMessage> messages = await target.MapMessagesAsync(new[] { item }, runId, occurredAt, CancellationToken.None);
 
             _output.WriteLine("Output message count: {0}", messages.Count);
 
@@ -57,6 +61,8 @@ public sealed class FeedIdItemIdMessageMapper_MapMessagesAsync_Should
         try
         {
             var target = CreateTestTarget();
+            var runId = Guid.NewGuid();
+            var occurredAt = DateTimeOffset.UtcNow;
             var item = CanonicalFeedItemFactory.Create(feedId: FeedId.From("feed-b"), itemId: FeedItemId.From("item-99"), title: "title", content: "body");
 
             _output.WriteLine(
@@ -66,8 +72,10 @@ public sealed class FeedIdItemIdMessageMapper_MapMessagesAsync_Should
                 item.PublishedAt,
                 item.Title,
                 item.Content);
+            _output.WriteLine("Input runId: {0}", runId);
+            _output.WriteLine("Input occurredAt: {0:O}", occurredAt);
 
-            IReadOnlyCollection<FeedKafkaMessage> messages = await target.MapMessagesAsync(new[] { item }, CancellationToken.None);
+            IReadOnlyCollection<FeedKafkaMessage> messages = await target.MapMessagesAsync(new[] { item }, runId, occurredAt, CancellationToken.None);
 
             _output.WriteLine("Output message count: {0}", messages.Count);
 
@@ -82,6 +90,39 @@ public sealed class FeedIdItemIdMessageMapper_MapMessagesAsync_Should
         catch (Exception ex)
         {
             _output.WriteLine("Test failure in MapPayloadFieldsFromCanonicalFeedItemWhenItemsAreProvided");
+            _output.WriteLine(ex.ToString());
+            throw;
+        }
+    }
+
+    [Fact]
+    public async Task IncludeRequiredContractFieldsInPayload()
+    {
+        try
+        {
+            var target = CreateTestTarget();
+            var runId = new Guid("3f8fef3f-8ee9-4e6b-9c11-2cded18f47fa");
+            var occurredAt = DateTimeOffset.Parse("2026-06-24T12:00:00Z");
+            var item = CanonicalFeedItemFactory.Create(feedId: FeedId.From("feed-x"), itemId: FeedItemId.From("item-1"));
+
+            _output.WriteLine("Input runId: {0}", runId);
+            _output.WriteLine("Input occurredAt: {0:O}", occurredAt);
+
+            IReadOnlyCollection<FeedKafkaMessage> messages = await target.MapMessagesAsync(new[] { item }, runId, occurredAt, CancellationToken.None);
+
+            FeedKafkaMessage message = Assert.Single(messages);
+
+            _output.WriteLine("Output payload: {0}", message.Payload);
+
+            // Verify required contract fields
+            Assert.Contains("\"schemaVersion\":\"1.0\"", message.Payload, StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("\"eventType\":\"feed-item-ingested\"", message.Payload, StringComparison.OrdinalIgnoreCase);
+            Assert.Contains($"\"runId\":\"{runId:D}\"", message.Payload, StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("\"occurredAt\":\"2026-06-24T12:00:00+00:00\"", message.Payload, StringComparison.OrdinalIgnoreCase);
+        }
+        catch (Exception ex)
+        {
+            _output.WriteLine("Test failure in IncludeRequiredContractFieldsInPayload");
             _output.WriteLine(ex.ToString());
             throw;
         }

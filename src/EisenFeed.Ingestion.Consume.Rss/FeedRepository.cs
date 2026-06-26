@@ -32,6 +32,12 @@ public sealed class FeedRepository : IRetrieveFeedItems
             HttpCompletionOption.ResponseHeadersRead,
             cancellationToken).ConfigureAwait(false);
 
+        // 304 Not Modified indicates no new content since last check
+        if (response.StatusCode == System.Net.HttpStatusCode.NotModified)
+        {
+            return Array.Empty<FeedItem>();
+        }
+
         response.EnsureSuccessStatusCode();
         string payload = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 

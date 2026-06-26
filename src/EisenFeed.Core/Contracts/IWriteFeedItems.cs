@@ -4,5 +4,5 @@ namespace EisenFeed.Core.Contracts;
 
 public interface IWriteFeedItems
 {
-    Task<DeliveryResult> PublishAsync(IEnumerable<FeedItem> items, CancellationToken cancellationToken = default);
+    Task<DeliveryResult> PublishAsync(IEnumerable<FeedItem> items, Guid runId, DateTimeOffset occurredAt, CancellationToken cancellationToken = default);
 }

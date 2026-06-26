@@ -43,8 +43,8 @@ public sealed class IngestionOrchestrator
     /// </summary>
     public async Task<IngestionRunSummary> RunOnceAsync(CancellationToken cancellationToken = default)
     {
-        var runId = Guid.NewGuid().ToString("D");
-        var startedAt = DateTimeOffset.UtcNow;
+        var runId = Guid.NewGuid();
+        var occurredAt = DateTimeOffset.UtcNow;
         
         // Stage 1: Retrieve
         var retrieved = await _retrieve.RetrieveAsync(cancellationToken).ConfigureAwait(false);
@@ -77,7 +77,7 @@ public sealed class IngestionOrchestrator
         {
             // Publish one item at a time to ensure continue-on-failure semantics
             var deliveryResult = await _produce
-                .PublishAsync(new[] { item }, cancellationToken)
+                .PublishAsync(new[] { item }, runId, occurredAt, cancellationToken)
                 .ConfigureAwait(false);
 
             var itemStatus = deliveryResult.DeliveredCount > 0
@@ -88,15 +88,15 @@ public sealed class IngestionOrchestrator
                 FeedId: item.FeedId,
                 ItemId: item.ItemId,
                 Status: itemStatus,
-                PublishAttemptedAt: startedAt,
-                IngestedAt: itemStatus == FeedItemIngestionStatus.Publishing ? startedAt : null,
+                PublishAttemptedAt: occurredAt,
+                IngestedAt: itemStatus == FeedItemIngestionStatus.Publishing ? occurredAt : null,
                 AttemptCount: 1,
                 LastError: itemStatus == FeedItemIngestionStatus.Failed ? "Publish failed" : null,
                 KafkaMessageKey: $"{item.FeedId}:{item.ItemId}",
                 KafkaTopic: itemStatus == FeedItemIngestionStatus.Publishing ? "feed-items" : null,
                 KafkaPartition: itemStatus == FeedItemIngestionStatus.Publishing ? 0 : null,
                 KafkaOffset: itemStatus == FeedItemIngestionStatus.Publishing ? 0 : null,
-                RunId: runId);
+                RunId: runId.ToString("D"));
 
             await _ingestionStore
                 .RecordAsync(ingestion, cancellationToken)
@@ -115,9 +115,9 @@ public sealed class IngestionOrchestrator
             : FeedIngestionStatus.Succeeded;
 
         return new IngestionRunSummary(
-            RunId: runId,
+            RunId: runId.ToString("D"),
             FeedId: retrieved.FirstOrDefault()?.FeedId ?? FeedId.From(string.Empty),
-            StartedAt: startedAt,
+            StartedAt: occurredAt,
             CompletedAt: completedAt,
             Status: status,
             DiscoveredCount: discoveredCount,
